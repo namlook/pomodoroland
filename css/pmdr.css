@@ -1,0 +1,35 @@
+
+#countdown {
+    font-size: 10em;
+    text-align: center;
+}
+
+#ctrlView {
+    text-align: center;
+}
+
+form {
+    text-align: center;
+}
+
+label {
+    display: inline;
+}
+
+.pomodoros{
+    text-align: center;
+}
+
+.pomodoros .reset {
+    color: #ccc;
+}
+
+.pomodoros .title {
+    color: red;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+	display: none !important;
+}
