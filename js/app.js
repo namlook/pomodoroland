@@ -54,7 +54,7 @@ App.Timer = Ember.Object.extend({
         this._interval = setInterval(function() {
             var remainingSeconds = that.get('remainingSeconds');
             if (remainingSeconds > 0) {
-                that.set('remainingSeconds', remainingSeconds - 1);
+                that.decrementProperty('remainingSeconds');
             }
             else {
                 that.onFinished(that.get('name'));
@@ -93,8 +93,7 @@ App.Pomodoros = Ember.Object.extend({
      * Increment the number of pomodoros and update localStorage
      */
     add: function() {
-        var total = this.get('total') + 1;
-        this.set('total', total);
+        this.incrementProperty('total');
         localStorage.setItem('pomodoros', total);
     }
 });
@@ -126,6 +125,10 @@ App.IndexRoute = Ember.Route.extend({
         timer.onFinished = function(name) {
             if (name === 'pomodoro') {
                 pomodoros.add();
+                App.notify('Pomodoro finished !', {body: 'time for a break'});
+            }
+            else {
+                App.notify("Break's over", {body: 'get back to work !'});
             }
             audio.play();
         };
@@ -142,8 +145,6 @@ App.IndexRoute = Ember.Route.extend({
         controller.set('timer', timer);
     }
 });
-
-
 
 App.IndexController = Ember.Controller.extend({
     /*
@@ -199,3 +200,27 @@ App.IndexController = Ember.Controller.extend({
         }
     }
 });
+
+
+App.notify = function(title, options) {
+    var _notify = function() {
+        new Notification(title, options);
+    };
+    var Notification = window.Notification || window.mozNotification || window.webkitNotification;
+    if (Notification) {
+        var permission = Notification.permission;
+        if (permission === "granted") {
+            _notify();
+        }
+        else if (permission !== 'denied') {
+            Notification.requestPermission(function (permission) {
+                if(!('permission' in Notification)) {
+                    Notification.permission = permission;
+                }
+                if (permission === "granted") {
+                    _notify();
+                }
+            });
+        }
+    }
+};
