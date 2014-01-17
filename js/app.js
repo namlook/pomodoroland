@@ -183,13 +183,13 @@ App.IndexController = Ember.Controller.extend({
      */
     actions: {
         start: function() {
-            this.get('timer').start({duration: 5, name: 'pomodoro'});
+            this.get('timer').start({duration: 25 * 60, name: 'pomodoro'});
         },
         shortBreak: function() {
-            this.get('timer').start({duration: 2, name: 'shortBreak'});
+            this.get('timer').start({duration: 5 * 60, name: 'shortBreak'});
         },
         longBreak: function() {
-            this.get('timer').start({duration: 4, name: 'longBreak'});
+            this.get('timer').start({duration: 15 * 60, name: 'longBreak'});
         },
         stop: function() {
             this.get('timer').stop();
