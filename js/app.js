@@ -12,6 +12,18 @@ App = Ember.Application.create({
         audio.src = 'audio/bong.wav';
         audio.type = 'audio/wave';
 
+        if (!App.timer) {
+            App.timer = new App.Timer();
+        }
+
+        if (!App.stats) {
+            App.stats = new App.Stats();
+        }
+
+        if (!App.settings) {
+            App.settings = new App.Settings();
+        }
+
         App.timer.onFinished = function(name) {
             if (name === 'pomodoro') {
                 App.stats.add();

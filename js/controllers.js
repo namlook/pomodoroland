@@ -1,6 +1,15 @@
 
-App.IndexController = Ember.Controller.extend({
+App.SettingsController = Ember.Controller.extend({
+    actions: {
+        closeModal: function() {
+            this.get('model').save();
+            return true;
+        }
+    }
+});
 
+
+App.ApplicationController = Ember.Controller.extend({
     /*
      * Pretty display the remaining seconds
      */
@@ -17,7 +26,6 @@ App.IndexController = Ember.Controller.extend({
     /*
      * Allow the title to display the duration in real time
      */
-    dynamicTitle: Ember.computed.alias('App.settings.dynamicTitle'),
     updateTitle: function() {
         var title = 'Emberodoro';
         if (App.settings.get('dynamicTitle')) {
@@ -33,24 +41,31 @@ App.IndexController = Ember.Controller.extend({
     isStarted: Ember.computed.alias('model.isStarted'),
     isStopped: Ember.computed.not('model.isStarted'),
 
+
     /*
      * Some actions when we clicked on buttons
      */
     actions: {
         start: function() {
-            this.get('model').start({duration: 3, name: 'pomodoro'});
+            this.get('model').start({
+                duration: App.settings.get('pomodoroDuration') * 60,
+                name: 'pomodoro'
+            });
         },
         shortBreak: function() {
-            this.get('model').start({duration: 5 * 60, name: 'shortBreak'});
+            this.get('model').start({
+                duration: App.settings.get('shortBreakDuration') * 60,
+                name: 'shortBreak'
+            });
         },
         longBreak: function() {
-            this.get('model').start({duration: 15 * 60, name: 'longBreak'});
+            this.get('model').start({
+                duration: App.settings.get('longBreakDuration') * 60,
+                name: 'longBreak'
+            });
         },
         stop: function() {
             this.get('model').stop();
-        },
-        close: function() {
-            console.log('foooo');
         }
     }
 });

@@ -1,16 +1,10 @@
 
 App.Router.map(function() {
-    this.resource('index', {path: '/'}, function() {
-        this.route('today');
-        this.route('settings');
-    });
+    this.route('today', {path: '/today'});
+    this.route('settings', {path: '/settings'});
 });
 
-App.IndexRoute = Ember.Route.extend({
-
-    redirect: function(){
-        this.transitionTo('index.today');
-    },
+App.ApplicationRoute = Ember.Route.extend({
 
     model: function() {
         return App.timer;
@@ -21,18 +15,24 @@ App.IndexRoute = Ember.Route.extend({
             App.stats.clear();
         },
         closeModal: function() {
-            this.transitionTo('index.today');
+            this.transitionTo('today');
         }
     }
 });
 
-App.IndexTodayRoute = Ember.Route.extend({
+App.IndexRoute = Ember.Route.extend({
+    redirect: function(){
+        this.transitionTo('today');
+    },
+});
+
+App.TodayRoute = Ember.Route.extend({
     model: function() {
         return App.stats;
     }
 });
 
-App.IndexSettingsRoute = Ember.Route.extend({
+App.SettingsRoute = Ember.Route.extend({
     model: function() {
         return App.settings;
     }

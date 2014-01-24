@@ -14,8 +14,8 @@
 
 
 
-  <script type="text/x-handlebars" data-template-name="index">
-    {{#link-to 'index.settings'}}Settings{{/link-to}}
+  <script type="text/x-handlebars">
+    {{#link-to 'settings'}}Settings{{/link-to}}
     <div class="row">
       <div class="small-12 small-centered columns">
 
@@ -36,7 +36,7 @@
   </script>
 
 
-  <script type="text/x-handlebars" data-template-name="index/today">
+  <script type="text/x-handlebars" data-template-name="today">
     <div class="pomodoros">
       <h1 class="title">{{total}} pomodoros</h1>
       <a href="#" class="reset" {{action 'reset'}}>reset</a>
@@ -44,25 +44,25 @@
   </script>
 
 
-  <script type="text/x-handlebars" data-template-name="index/settings">
+  <script type="text/x-handlebars" data-template-name="settings">
     {{#modal-dialog action='closeModal'}}
       <h1>Settings</h1>
       <form>
 
         <label>Show dynamic title</label>
-        {{input type="checkbox" checked=dynamicTitle}}
+        {{input type="checkbox" checked=model.dynamicTitle}}
 
         <fieldset>
           <legend>Durations</legend>
 
           <label class="inline">Pomodoro</label>
-          {{input type='number' value=pomodoroDuration}}
+          {{input type='number' value=model.pomodoroDuration}}
 
           <label>short break</label>
-          {{input type='number' value=shortBreakDuration}}
+          {{input type='number' value=model.shortBreakDuration}}
 
           <label>long break</label>
-          {{input type='number' value=longBreakDuration}}
+          {{input type='number' value=model.longBreakDuration}}
 
           </fieldset>
 

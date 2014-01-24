@@ -3,7 +3,7 @@
  *  The application timer
  */
 
-App.timer = Ember.Object.create({
+App.Timer = Ember.Object.extend({
 
     init: function() {
         var storedTimer = JSON.parse(localStorage.getItem('timer'));
@@ -21,7 +21,6 @@ App.timer = Ember.Object.create({
     isStarted: false,
     name: null,
 
-
     /*
      * Stop the timer and reset all values
      */
@@ -32,6 +31,7 @@ App.timer = Ember.Object.create({
         this.set('remainingSeconds', 0);
         this.set('isStarted', false);
         this.set('name', null);
+        this.delete();
     },
 
     /*
@@ -50,13 +50,7 @@ App.timer = Ember.Object.create({
         this.set('name', options.name);
         this.set('isStarted', true);
 
-        // store the timer into the localStorage so we can check if
-        // it is already running when reloading the page
-        localStorage.setItem('timer', JSON.stringify({
-            startedAt: Date.now(),
-            duration: options.duration,
-            name: options.name
-        }));
+        this.save();
 
         clearInterval(this._interval);
         var that = this;
@@ -72,6 +66,19 @@ App.timer = Ember.Object.create({
         }, 1000);
     },
 
+    // store the timer into the localStorage so we can check if
+    // it is already running when reloading the page
+    save: function() {
+        localStorage.setItem('timer', JSON.stringify({
+            startedAt: Date.now(),
+            duration: this.get('duration'),
+            name: this.get('name')
+        }));
+    },
+
+    delete: function() {
+        localStorage.removeItem('timer');
+    },
 
     /*
      * Hook to apply some logic when the timer is over.
@@ -87,7 +94,7 @@ App.timer = Ember.Object.create({
  * Stores the total of pomodoros since the last reset
  *
  */
-App.stats = Ember.Object.create({
+App.Stats = Ember.Object.extend({
 
     init: function() {
         // setup the pomodors
@@ -104,26 +111,51 @@ App.stats = Ember.Object.create({
      */
     clear: function() {
         this.set('total', 0);
-        localStorage.removeItem('stats');
     },
-
 
     /*
      * Increment the number of pomodoros and update localStorage
      */
     add: function() {
         this.incrementProperty('total');
+    },
+
+    save: function() {
         localStorage.setItem('stats', this.get('total'));
-    }
+    }.observes('total'),
 });
+
 
 /*
  * User settings
  */
-App.settings = Ember.Object.create({
+App.Settings = Ember.Object.extend({
+    init: function() {
+        var settings = JSON.parse(localStorage.getItem('settings'));
+        if (settings) {
+            this.setProperties(settings);
+        }
+    },
+
     pomodoroDuration: 25,
-    shortBreakDuration: 25,
-    longBreakDuration: 25,
-    dynamicTitle: true
+    shortBreakDuration: 5,
+    longBreakDuration: 15,
+    dynamicTitle: true,
+
+
+    save: function() {
+        properties = this.getProperties(
+            'pomodoroDuration',
+            'shortBreakDuration',
+            'longBreakDuration',
+            'dynamicTitle'
+        );
+        localStorage.setItem('settings', JSON.stringify(properties));
+    }.observes(
+        'pomodoroDuration',
+        'shortBreakDuration',
+        'longBreakDuration',
+        'dynamicTitle'
+    )
 });
 

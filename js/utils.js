@@ -21,3 +21,16 @@ App.notify = function(title, options) {
         }
     }
 };
+
+App.bell = (function() {
+    // setup the bell
+    var audio = new Audio();
+    audio.src = 'audio/bong.wav';
+    audio.type = 'audio/wave';
+
+    return {
+        play: function() {
+            audio.play();
+        }
+    };
+})();
