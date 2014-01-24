@@ -11,7 +11,7 @@
 </head>
 <body>
 
-  <script type="text/x-handlebars" id="index">
+  <script type="text/x-handlebars" data-template-name="index">
     <div class="row">
       <div class="small-12 small-centered columns">
 
@@ -29,14 +29,18 @@
             {{input type="checkbox" checked=dynamicTitle}}
         </form>
 
-        <div class="pomodoros">
-            <h1 class="title">{{pomodoros.total}} pomodoros</h1>
-            <a href="#" class="reset" {{action 'reset'}}>reset</a>
-        </div>
+        {{outlet}}
+
       </div>
     </div>
   </script>
 
+  <script type="text/x-handlebars" data-template-name="index/today">
+    <div class="pomodoros">
+      <h1 class="title">{{total}} pomodoros</h1>
+      <a href="#" class="reset" {{action 'reset'}}>reset</a>
+    </div>
+  </script>
 
   <script src="js/libs/jquery-1.10.2.js"></script>
 

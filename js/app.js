@@ -1,12 +1,57 @@
 
-App = Ember.Application.create();
+App = Ember.Application.create({
+
+    /*
+     * Init the application
+     *
+     * This initialization loads the bell, fetch the timer and the stats from
+     * the localStorage and configure the `timer.onFinished()` hook
+     */
+    ready: function() {
+        var audio, timer, stats;
+
+        // setup the bell
+        audio = new Audio();
+        audio.src = 'audio/bong.wav';
+        audio.type = 'audio/wave';
+
+
+        // setup the timer and fetch the localStorage to see if there
+        // is no pomodoro already running
+        var storedTimer = JSON.parse(localStorage.getItem('timer'));
+        if (storedTimer) {
+            var delta = (Date.now() - storedTimer.startedAt) / 1000;
+            if (storedTimer.duration - delta > 0) {
+                var newDuration = parseInt(storedTimer.duration - delta, 10);
+                App.timer.start({duration: newDuration, name: storedTimer.name});
+            }
+        }
+
+        App.timer.onFinished = function(name) {
+            if (name === 'pomodoro') {
+                App.stats.add();
+                App.notify('Pomodoro finished !', {body: 'time for a break'});
+            }
+            else {
+                App.notify("Break's over", {body: 'get back to work !'});
+            }
+            audio.play();
+        };
+
+        // setup the pomodors
+        var nbPomodoros = parseInt(localStorage.getItem('stats'), 10);
+        if (nbPomodoros > 0) {
+            App.stats.total = nbPomodoros;
+        }
+    }
+});
 
 
 /*
  *  A timer model
  */
 
-App.Timer = Ember.Object.extend({
+App.timer = Ember.Object.create({
     duration: 0,
     remainingSeconds: 0,
     isStarted: false,
@@ -72,12 +117,12 @@ App.Timer = Ember.Object.extend({
 });
 
 /*
- * A pomodoros model
+ * Statistics model
  *
  * Stores the total of pomodoros since the last reset
  *
  */
-App.Pomodoros = Ember.Object.extend({
+App.stats = Ember.Object.create({
     total: 0,
 
     /*
@@ -85,7 +130,7 @@ App.Pomodoros = Ember.Object.extend({
      */
     clear: function() {
         this.set('total', 0);
-        localStorage.removeItem('pomodoros');
+        localStorage.removeItem('stats');
     },
 
 
@@ -94,55 +139,36 @@ App.Pomodoros = Ember.Object.extend({
      */
     add: function() {
         this.incrementProperty('total');
-        localStorage.setItem('pomodoros', this.get('total'));
+        localStorage.setItem('stats', this.get('total'));
     }
 });
 
-
+App.Router.map(function() {
+    this.resource('index', {path: '/'}, function() {
+        this.route('today');
+    });
+});
 
 App.IndexRoute = Ember.Route.extend({
-    setupController: function(controller) {
-        var audio, timer, pomodoros;
 
-        // setup the bell
-        audio = new Audio();
-        audio.src = 'audio/bong.wav';
-        audio.type = 'audio/wave';
+    redirect: function(){
+        this.transitionTo('index.today');
+    },
 
+    model: function() {
+        return App.timer;
+    },
 
-        // setup the timer and fetch the localStorage to see if there
-        // is no pomodoro already running
-        timer = new App.Timer();
-        var storedTimer = JSON.parse(localStorage.getItem('timer'));
-        if (storedTimer) {
-            var delta = (Date.now() - storedTimer.startedAt) / 1000;
-            if (storedTimer.duration - delta > 0) {
-                var newDuration = parseInt(storedTimer.duration - delta, 10);
-                timer.start({duration: newDuration, name: storedTimer.name});
-            }
+    actions: {
+        reset: function() {
+            App.stats.clear();
         }
+    }
+});
 
-        timer.onFinished = function(name) {
-            if (name === 'pomodoro') {
-                pomodoros.add();
-                App.notify('Pomodoro finished !', {body: 'time for a break'});
-            }
-            else {
-                App.notify("Break's over", {body: 'get back to work !'});
-            }
-            audio.play();
-        };
-
-        // setup the pomodors
-        pomodoros = new App.Pomodoros();
-        var nbPomodoros = parseInt(localStorage.getItem('pomodoros'), 10);
-        if (nbPomodoros > 0) {
-            pomodoros.total = nbPomodoros;
-        }
-
-        // load the controller
-        controller.set('pomodoros', pomodoros);
-        controller.set('timer', timer);
+App.IndexTodayRoute = Ember.Route.extend({
+    model: function() {
+        return App.stats;
     }
 });
 
@@ -152,12 +178,12 @@ App.IndexController = Ember.Controller.extend({
      */
     duration: function() {
         var duration, minutes, seconds;
-        duration = this.get('timer.remainingSeconds');
+        duration = this.get('model').get('remainingSeconds');
         minutes = parseInt(duration/60, 10);
         minutes = _.str.pad(minutes, 2, '0');
         seconds = _.str.pad(duration % 60, 2, '0');
         return [minutes, seconds].join(':');
-    }.property('timer.remainingSeconds'),
+    }.property('model.remainingSeconds'),
 
 
     /*
@@ -170,33 +196,30 @@ App.IndexController = Ember.Controller.extend({
             title = this.get('duration');
         }
         $('title').text(title);
-    }.observes('timer.remainingSeconds', 'dynamicTitle'),
+    }.observes('model.remainingSeconds', 'dynamicTitle'),
 
 
     /*
      * Is the timer started ?
      */
-    isStarted: Ember.computed.alias('timer.isStarted'),
-    isStopped: Ember.computed.not('timer.isStarted'),
+    isStarted: Ember.computed.alias('model.isStarted'),
+    isStopped: Ember.computed.not('model.isStarted'),
 
     /*
      * Some actions when we clicked on buttons
      */
     actions: {
         start: function() {
-            this.get('timer').start({duration: 25 * 60, name: 'pomodoro'});
+            this.get('model').start({duration: 3, name: 'pomodoro'});
         },
         shortBreak: function() {
-            this.get('timer').start({duration: 5 * 60, name: 'shortBreak'});
+            this.get('model').start({duration: 5 * 60, name: 'shortBreak'});
         },
         longBreak: function() {
-            this.get('timer').start({duration: 15 * 60, name: 'longBreak'});
+            this.get('model').start({duration: 15 * 60, name: 'longBreak'});
         },
         stop: function() {
-            this.get('timer').stop();
-        },
-        reset: function() {
-            this.get('pomodoros').clear();
+            this.get('model').stop();
         }
     }
 });
@@ -224,3 +247,7 @@ App.notify = function(title, options) {
         }
     }
 };
+
+
+
+
