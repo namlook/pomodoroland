@@ -4,6 +4,18 @@
  */
 
 App.timer = Ember.Object.create({
+
+    init: function() {
+        var storedTimer = JSON.parse(localStorage.getItem('timer'));
+        if (storedTimer) {
+            var delta = (Date.now() - storedTimer.startedAt) / 1000;
+            if (storedTimer.duration - delta > 0) {
+                var newDuration = parseInt(storedTimer.duration - delta, 10);
+                this.start({duration: newDuration, name: storedTimer.name});
+            }
+        }
+    },
+
     duration: 0,
     remainingSeconds: 0,
     isStarted: false,
@@ -76,6 +88,15 @@ App.timer = Ember.Object.create({
  *
  */
 App.stats = Ember.Object.create({
+
+    init: function() {
+        // setup the pomodors
+        var nbPomodoros = parseInt(localStorage.getItem('stats'), 10);
+        if (nbPomodoros > 0) {
+            this.set('total', nbPomodoros);
+        }
+    },
+
     total: 0,
 
     /*
