@@ -1,6 +1,6 @@
 
 App = Ember.Application.create({
-
+    LOG_TRANSITIONS: true,
     /*
      * Init the application
      *

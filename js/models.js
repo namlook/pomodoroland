@@ -117,3 +117,13 @@ App.stats = Ember.Object.create({
     }
 });
 
+/*
+ * User settings
+ */
+App.settings = Ember.Object.create({
+    pomodoroDuration: 25,
+    shortBreakDuration: 25,
+    longBreakDuration: 25,
+    dynamicTitle: true
+});
+

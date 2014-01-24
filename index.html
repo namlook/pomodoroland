@@ -11,7 +11,11 @@
 </head>
 <body>
 
+
+
+
   <script type="text/x-handlebars" data-template-name="index">
+    {{#link-to 'index.settings'}}Settings{{/link-to}}
     <div class="row">
       <div class="small-12 small-centered columns">
 
@@ -24,16 +28,13 @@
             <button {{action 'stop'}} {{bind-attr disabled=isStopped}}>stop</button>
         </div>
 
-        <form>
-            <label for="dynamicTitleCb">Show dynamic title</label>
-            {{input type="checkbox" checked=dynamicTitle}}
-        </form>
-
         {{outlet}}
 
       </div>
     </div>
+
   </script>
+
 
   <script type="text/x-handlebars" data-template-name="index/today">
     <div class="pomodoros">
@@ -41,6 +42,47 @@
       <a href="#" class="reset" {{action 'reset'}}>reset</a>
     </div>
   </script>
+
+
+  <script type="text/x-handlebars" data-template-name="index/settings">
+    {{#modal-dialog action='closeModal'}}
+      <h1>Settings</h1>
+      <form>
+
+        <label>Show dynamic title</label>
+        {{input type="checkbox" checked=dynamicTitle}}
+
+        <fieldset>
+          <legend>Durations</legend>
+
+          <label class="inline">Pomodoro</label>
+          {{input type='number' value=pomodoroDuration}}
+
+          <label>short break</label>
+          {{input type='number' value=shortBreakDuration}}
+
+          <label>long break</label>
+          {{input type='number' value=longBreakDuration}}
+
+          </fieldset>
+
+      </form>
+    {{/modal-dialog}}
+  </script>
+
+
+
+  <script type="text/x-handlebars" id="components/modal-dialog">
+    <div id="modalDialog" class="reveal-modal" data-reveal>
+      {{yield}}
+      <a {{action 'closeModal'}} class="close-reveal-modal">&#215;</a>
+    </div>
+  </script>
+
+
+
+
+
 
   <script src="js/libs/jquery-1.10.2.js"></script>
 
@@ -56,6 +98,7 @@
   <script src="js/models.js"></script>
   <script src="js/routes.js"></script>
   <script src="js/controllers.js"></script>
+  <script src="js/components.js"></script>
   <script src="js/utils.js"></script>
 
   <!-- to activate the test runner, add the "?test" query string parameter -->

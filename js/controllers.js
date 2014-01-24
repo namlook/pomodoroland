@@ -1,5 +1,6 @@
 
 App.IndexController = Ember.Controller.extend({
+
     /*
      * Pretty display the remaining seconds
      */
@@ -16,14 +17,14 @@ App.IndexController = Ember.Controller.extend({
     /*
      * Allow the title to display the duration in real time
      */
-    dynamicTitle: true,
+    dynamicTitle: Ember.computed.alias('App.settings.dynamicTitle'),
     updateTitle: function() {
         var title = 'Emberodoro';
-        if (this.get('dynamicTitle')) {
+        if (App.settings.get('dynamicTitle')) {
             title = this.get('duration');
         }
         $('title').text(title);
-    }.observes('model.remainingSeconds', 'dynamicTitle'),
+    }.observes('model.remainingSeconds', 'App.settings.dynamicTitle'),
 
 
     /*
@@ -47,6 +48,11 @@ App.IndexController = Ember.Controller.extend({
         },
         stop: function() {
             this.get('model').stop();
+        },
+        close: function() {
+            console.log('foooo');
         }
     }
 });
+
+
