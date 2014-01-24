@@ -94,7 +94,7 @@ App.Pomodoros = Ember.Object.extend({
      */
     add: function() {
         this.incrementProperty('total');
-        localStorage.setItem('pomodoros', total);
+        localStorage.setItem('pomodoros', this.get('total'));
     }
 });
 
