@@ -30,7 +30,15 @@ label {
 
 .reveal-modal.settings {
     top: 0;
-    width: 30%;
-    left: 70%;
     margin-left: 0;
+    width: 90%;
+    left: 10%;
+}
+
+
+@media (min-width:1024px){
+    .reveal-modal.settings {
+        width: 30%;
+        left: 70%;
+    }
 }
