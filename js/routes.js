@@ -1,6 +1,6 @@
 
 App.Router.map(function() {
-    this.route('today', {path: '/today'});
+    this.route('today', {path: '/'});
     this.route('settings', {path: '/settings'});
 });
 
