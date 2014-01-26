@@ -21,10 +21,12 @@
         <h1 id="countdown">{{duration}}</h1>
 
         <div id="ctrlView">
-            <button {{action 'start'}} {{bind-attr disabled=isStarted}}>start</button>
-            <button {{action 'shortBreak'}} {{bind-attr disabled=isStarted}}>break</button>
-            <button {{action 'longBreak'}} {{bind-attr disabled=isStarted}}>long break</button>
-            <button {{action 'stop'}} {{bind-attr disabled=isStopped}}>stop</button>
+            <button {{action 'start'}} {{bind-attr disabled=isStarted}}>start
+            </button><button {{action 'shortBreak'}} {{bind-attr disabled=isStarted}}>break
+            </button><button {{action 'longBreak'}} {{bind-attr disabled=isStarted}}>long break
+            </button><button {{action 'stop'}} {{bind-attr disabled=isStopped}}>stop</button>
+            <br />
+            {{#link-to 'settings' classNames='muted'}}settings{{/link-to}}
         </div>
 
         {{outlet}}
@@ -38,7 +40,6 @@
   <script type="text/x-handlebars" data-template-name="today">
     <div class="pomodoros">
       <h1 class="title">{{total}} pomodoros</h1>
-      {{#link-to 'settings' classNames='muted'}}settings{{/link-to}}
     </div>
   </script>
 
