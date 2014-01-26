@@ -22,3 +22,26 @@ App.ModalDialogComponent = Ember.Component.extend({
     }
 
 });
+
+
+
+App.ConfirmButtonComponent = Ember.Component.extend({
+    tagName: 'button',
+    classNameBindings: ['buttonType'],
+    buttonType: '',
+
+    inConfirmationMode: false,
+
+    confirmTitle: 'click again to confirm',
+
+    click: function() {
+        if (this.get('inConfirmationMode')) {
+            this.sendAction('action', this.get('param'));
+        }
+        else {
+            this.set('inConfirmationMode', true);
+            this.set('buttonType', 'alert');
+        }
+    }
+});
+

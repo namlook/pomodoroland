@@ -69,7 +69,7 @@
       </form>
 
       <div class="small-12 text-right columns">
-        <a {{action 'resetPomodoros'}} class="button small alert">reset pomodoros</a>
+        {{confirm-button title="reset pomodoros" action="resetPomodoros"}}
       </div>
 
     {{/modal-dialog}}
@@ -80,6 +80,14 @@
   <script type="text/x-handlebars" id="components/modal-dialog">
       {{yield}}
       <a {{action 'closeModal'}} class="close-reveal-modal">&#215;</a>
+  </script>
+
+  <script type="text/x-handlebars" id="components/confirm-button">
+    {{#if inConfirmationMode}}
+      {{confirmTitle}}
+    {{else}}
+      {{title}}
+    {{/if}}
   </script>
 
 
