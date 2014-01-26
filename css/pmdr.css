@@ -17,7 +17,7 @@ label {
     text-align: center;
 }
 
-.pomodoros .reset {
+.muted {
     color: #ccc;
 }
 
@@ -25,4 +25,11 @@ label {
     color: red;
     margin-bottom: 0;
     padding-bottom: 0;
+}
+
+.reveal-modal.settings {
+    top: 0;
+    width: 30%;
+    left: 70%;
+    margin-left: 0;
 }

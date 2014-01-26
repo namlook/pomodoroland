@@ -15,7 +15,6 @@
 
 
   <script type="text/x-handlebars">
-    {{#link-to 'settings'}}Settings{{/link-to}}
     <div class="row">
       <div class="small-12 small-centered columns">
 
@@ -39,13 +38,13 @@
   <script type="text/x-handlebars" data-template-name="today">
     <div class="pomodoros">
       <h1 class="title">{{total}} pomodoros</h1>
-      <a href="#" class="reset" {{action 'reset'}}>reset</a>
+      {{#link-to 'settings' classNames='muted'}}settings{{/link-to}}
     </div>
   </script>
 
 
   <script type="text/x-handlebars" data-template-name="settings">
-    {{#modal-dialog action='closeModal'}}
+    {{#modal-dialog action='closeModal' name="settings"}}
       <h1>Settings</h1>
       <form>
 
@@ -67,19 +66,20 @@
           </fieldset>
 
       </form>
+
+      <div class="small-12 text-right columns">
+        <a {{action 'resetPomodoros'}} class="button small alert">reset pomodoros</a>
+      </div>
+
     {{/modal-dialog}}
   </script>
 
 
 
   <script type="text/x-handlebars" id="components/modal-dialog">
-    <div id="modalDialog" class="reveal-modal" data-reveal>
       {{yield}}
       <a {{action 'closeModal'}} class="close-reveal-modal">&#215;</a>
-    </div>
   </script>
-
-
 
 
 

@@ -1,9 +1,16 @@
 
-App.SettingsController = Ember.Controller.extend({
+App.SettingsController = Ember.Controller.extend(Ember.TargetActionSupport, {
     actions: {
         closeModal: function() {
             this.get('model').save();
             return true;
+        },
+        resetPomodoros: function() {
+            App.stats.clear();
+            this.triggerAction({
+                action: 'closeModal',
+                target: this
+            });
         }
     }
 });
