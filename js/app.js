@@ -7,6 +7,7 @@ App = Ember.Application.create({
      * This initialization loads the bell and configure the `timer.onFinished()` hook
      */
     ready: function() {
+
         // setup the bell
         var audio = new Audio();
         audio.src = 'audio/bong.wav';

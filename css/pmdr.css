@@ -1,6 +1,6 @@
 
 #countdown {
-    font-size: 10em;
+    font-size: 6em;
     text-align: center;
 }
 
@@ -20,6 +20,7 @@ label {
 
 .muted {
     color: #ccc;
+    font-size: 2em;
 }
 
 .pomodoros .title {
@@ -35,8 +36,18 @@ label {
     left: 10%;
 }
 
+@media (min-width:380px){
+    #countdown {
+        font-size: 8em;
+    }
+}
 
 @media (min-width:1024px){
+
+    #countdown {
+        font-size: 10em;
+    }
+
     .reveal-modal.settings {
         width: 30%;
         left: 70%;

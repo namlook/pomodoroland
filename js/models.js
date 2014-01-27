@@ -151,11 +151,6 @@ App.Settings = Ember.Object.extend({
             'dynamicTitle'
         );
         localStorage.setItem('settings', JSON.stringify(properties));
-    }.observes(
-        'pomodoroDuration',
-        'shortBreakDuration',
-        'longBreakDuration',
-        'dynamicTitle'
-    )
+    }
 });
 
