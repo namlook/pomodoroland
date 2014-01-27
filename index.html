@@ -94,25 +94,27 @@
             <a class="small success button" {{action 'save'}}>save</a>
           </div>
 
-        <fieldset>
-          <legend>Durations</legend>
+        <div class="smal-12 columns">
+          <fieldset>
+            <legend>Durations</legend>
 
-          <label>Pomodoro</label>
-          {{input type='number' value=model.pomodoroDuration}}
+            <label>Pomodoro</label>
+            {{input type='number' value=model.pomodoroDuration}}
 
-          <label>Short break</label>
-          {{input type='number' value=model.shortBreakDuration}}
+            <label>Short break</label>
+            {{input type='number' value=model.shortBreakDuration}}
 
-          <label>Long break</label>
-          {{input type='number' value=model.longBreakDuration}}
+            <label>Long break</label>
+            {{input type='number' value=model.longBreakDuration}}
 
-        </fieldset>
-        <fieldset>
-          <legend>Import/Export</legend>
+          </fieldset>
+          <fieldset>
+            <legend>Import/Export</legend>
 
-          <label>Your private Key</label>
-          {{input type='text' value=model.parseKey}}
-        </fieldset>
+            <label>Your private Key</label>
+            {{input type='text' value=model.parseKey}}
+          </fieldset>
+        </div>
 
       </form>
 
