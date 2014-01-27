@@ -5,17 +5,6 @@
 
 App.Timer = Ember.Object.extend({
 
-    init: function() {
-        // var storedTimer = JSON.parse(localStorage.getItem('timer'));
-        // if (storedTimer) {
-        //     var delta = (Date.now() - storedTimer.startedAt) / 1000;
-        //     if (storedTimer.duration - delta > 0) {
-        //         var newDuration = parseInt(storedTimer.duration - delta, 10);
-        //         this.start({duration: newDuration, name: storedTimer.name});
-        //     }
-        // }
-    },
-
     duration: 0,
     remainingSeconds: 0,
     isStarted: false,
@@ -80,45 +69,6 @@ App.Timer = Ember.Object.extend({
 
 
 /*
- * Statistics model
- *
- * Stores the total of pomodoros since the last reset
- *
- */
-// App.Stats = Ember.Object.extend({
-
-//     init: function() {
-//         // setup the pomodors
-//         var nbPomodoros = parseInt(localStorage.getItem('stats'), 10);
-//         if (nbPomodoros > 0) {
-//             this.set('total', nbPomodoros);
-//         }
-//     },
-
-//     total: 0,
-
-
-//      * Clear the number of pomodoros and update localStorage
-
-//     clear: function() {
-//         this.set('total', 0);
-//     },
-
-//     /*
-//      * Increment the number of pomodoros and update localStorage
-//      */
-//     add: function() {
-//         this.incrementProperty('total');
-//     },
-
-//     save: function() {
-//         localStorage.setItem('stats', this.get('total'));
-//     }.observes('total'),
-// });
-
-
-
-/*
  * User settings
  */
 App.Settings = Ember.Object.extend({
@@ -133,6 +83,7 @@ App.Settings = Ember.Object.extend({
     shortBreakDuration: 5,
     longBreakDuration: 15,
     dynamicTitle: true,
+    parseKey: null,
 
 
     save: function() {
@@ -140,33 +91,25 @@ App.Settings = Ember.Object.extend({
             'pomodoroDuration',
             'shortBreakDuration',
             'longBreakDuration',
-            'dynamicTitle'
+            'dynamicTitle',
+            'parseKey'
         );
         localStorage.setItem('settings', JSON.stringify(properties));
     }
 });
 
+
+
 /*
  * Pomodoros
  */
-App.Pomodoro = DS.Model.extend({
-    createdAt: DS.attr('string', {
+App.Pomodoro = DS.ParseModel.extend({
+
+    project: DS.attr('string'),
+    userKey: DS.attr('string'),
+    date: DS.attr('string', {
       defaultValue: function() { return new Date(); }
-    }),
-    project: DS.attr('string')
+    })
 });
-
-App.Pomodoro.FIXTURES = [{
-    id: 1,
-    createdAt: 'Mon Jan 27 2014 11:42:14 GMT+0100 (CET)'
-},{
-    id: 2,
-    createdAt: 'Mon Jan 27 2014 12:42:14 GMT+0100 (CET)'
-}, {
-    id: 3,
-    createdAt: 'Mon Jan 26 2014 12:42:14 GMT+0100 (CET)'
-}];
-
-
 
 

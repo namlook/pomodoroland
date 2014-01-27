@@ -85,60 +85,44 @@
   <script type="text/x-handlebars" data-template-name="settings">
     <div class="text-left">
       <form>
+          <div class="small-6 columns">
+            <label>Show dynamic title</label>
+            {{input type="checkbox" checked=model.dynamicTitle}}
+          </div>
 
-        <label>Show dynamic title</label>
-        {{input type="checkbox" checked=model.dynamicTitle}}
+          <div class="small-6 text-right columns">
+            <a class="small success button" {{action 'save'}}>save</a>
+          </div>
 
         <fieldset>
           <legend>Durations</legend>
 
-          <label class="inline">Pomodoro</label>
+          <label>Pomodoro</label>
           {{input type='number' value=model.pomodoroDuration}}
 
-          <label>short break</label>
+          <label>Short break</label>
           {{input type='number' value=model.shortBreakDuration}}
 
-          <label>long break</label>
+          <label>Long break</label>
           {{input type='number' value=model.longBreakDuration}}
 
-          </fieldset>
+        </fieldset>
+        <fieldset>
+          <legend>Import/Export</legend>
+
+          <label>Your private Key</label>
+          {{input type='text' value=model.parseKey}}
+        </fieldset>
 
       </form>
 
-      <div class="small-12 text-right columns">
-        {{confirm-button title="reset pomodoros" action="resetPomodoros"}}
-      </div>
+
     </div>
   </script>
 
   <script type="text/x-handlebars" data-template-name="settingsOld">
     {{#modal-dialog action='closeModal' name="settings"}}
-      <h1>Settings</h1>
-      <form>
-
-        <label>Show dynamic title</label>
-        {{input type="checkbox" checked=model.dynamicTitle}}
-
-        <fieldset>
-          <legend>Durations</legend>
-
-          <label class="inline">Pomodoro</label>
-          {{input type='number' value=model.pomodoroDuration}}
-
-          <label>short break</label>
-          {{input type='number' value=model.shortBreakDuration}}
-
-          <label>long break</label>
-          {{input type='number' value=model.longBreakDuration}}
-
-          </fieldset>
-
-      </form>
-
-      <div class="small-12 text-right columns">
         {{confirm-button title="reset pomodoros" action="resetPomodoros"}}
-      </div>
-
     {{/modal-dialog}}
   </script>
 
@@ -197,6 +181,7 @@
   <script src="js/libs/ember-1.3.1.js"></script>
   <script src="js/libs/ember-data.js"></script>
   <script src="js/vendors/localstorage_adapter.js"></script>
+  <script src="js/vendors/ember-parse-adapter-0.5.1.min.js"></script>
 
   <script src="js/vendors/underscore-min.js"></script>
   <script src="js/vendors/underscore.string.min.js"></script>

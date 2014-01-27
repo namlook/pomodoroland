@@ -1,16 +1,9 @@
 
-App.SettingsController = Ember.Controller.extend(Ember.TargetActionSupport, {
+App.SettingsController = Ember.Controller.extend({
     actions: {
-        closeModal: function() {
+        save: function() {
             this.get('model').save();
-            return true;
-        },
-        resetPomodoros: function() {
-            App.stats.clear();
-            this.triggerAction({
-                action: 'closeModal',
-                target: this
-            });
+            App.reset();
         }
     }
 });
@@ -49,7 +42,9 @@ App.ApplicationController = Ember.Controller.extend({
         var model = this.get('model');
         if(model.get('isStarted') && model.get('remainingSeconds') === 0) {
             if (model.get('name') === 'pomodoro') {
-                var pomodoro = this.store.createRecord('pomodoro');
+                var pomodoro = this.store.createRecord('pomodoro', {
+                    userKey: App.settings.get('parseKey')
+                });
                 pomodoro.save();
                 App.notify('Pomodoro finished !', {body: 'time for a break'});
             }
@@ -119,12 +114,11 @@ App.WeekStatsController = Ember.ArrayController.extend({
         for (var i=6; i>-1; i--) {
             var date = new Date();
             date.setTime(date.getTime() - i * 24 * 60 * 60 * 1000);
-            console.log(formatDate(date));
             dataCount[formatDate(date)] = 0;
         }
 
         this.get('model').forEach(function(obj){
-            var date = new Date(obj.get('createdAt'));
+            var date = new Date(obj.get('date'));
             dataCount[formatDate(date)] += 1;
         });
 

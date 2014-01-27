@@ -9,16 +9,6 @@ App.ApplicationRoute = Ember.Route.extend({
 
     model: function() {
         return App.timer;
-    },
-
-
-    actions: {
-        reset: function() {
-            App.stats.clear();
-        },
-        closeModal: function() {
-            this.transitionTo('today-stats');
-        }
     }
 });
 
@@ -30,19 +20,19 @@ App.IndexRoute = Ember.Route.extend({
 
 App.TodayStatsRoute = Ember.Route.extend({
     model: function() {
-        return this.store.find('pomodoro');
+        var userKey = App.settings.get('parseKey');
+        return this.store.filter('pomodoro', { userKey: userKey}, function(pomodoro) {
+              return pomodoro.get('userKey') === userKey;
+        });
     }
 });
 
 App.WeekStatsRoute = Ember.Route.extend({
     model: function() {
-        return this.store.find('pomodoro');
-    }
-});
-
-App.TodayOldRoute = Ember.Route.extend({
-    model: function() {
-        return App.stats;
+        var userKey = App.settings.get('parseKey');
+        return this.store.filter('pomodoro', { userKey: userKey}, function(pomodoro) {
+              return pomodoro.get('userKey') === userKey;
+        });
     }
 });
 
