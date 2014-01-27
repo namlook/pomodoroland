@@ -108,19 +108,39 @@ App.TodayStatsController = Ember.ArrayController.extend({
 App.WeekStatsController = Ember.ArrayController.extend({
 
     data: function() {
-        var dataCount = {};
+        formatDate = function(date){
+            return date.toDateString().split(' ').splice(0, 3).join(' ');
+        };
+
+        var columnNames = [],
+            columnData = [],
+            dataCount = {};
+
+        for (var i=6; i>-1; i--) {
+            var date = new Date();
+            date.setTime(date.getTime() - i * 24 * 60 * 60 * 1000);
+            console.log(formatDate(date));
+            dataCount[formatDate(date)] = 0;
+        }
+
         this.get('model').forEach(function(obj){
-            var date = new Date(obj.get('createdAt')).toDateString();
-            if (!dataCount[date]) {
-                dataCount[date] = 0;
-            }
-            dataCount[date] += 1;
+            var date = new Date(obj.get('createdAt'));
+            dataCount[formatDate(date)] += 1;
         });
 
-        var columnNames = [];
-        var columnData = [];
+        var today = formatDate(new Date());
+        var yesterday = new Date();
+        yesterday.setTime(yesterday.getTime() - 24 * 60 * 60 * 1000);
+        yesterday = formatDate(yesterday);
+
         _.pairs(dataCount).forEach(function(pair) {
-            columnNames.push(pair[0]);
+            if (pair[0] === today){
+                columnNames.push('today');
+            } else if (pair[0] === yesterday) {
+                columnNames.push('yesterday');
+            } else {
+                columnNames.push(pair[0]);
+            }
             columnData.push(pair[1]);
         });
         columnData = [{data: columnData}];

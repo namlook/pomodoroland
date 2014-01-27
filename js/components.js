@@ -57,6 +57,7 @@ App.BarChartComponent = Ember.Component.extend({
     didInsertElement: function() {
         var config = {
             chart: {
+                height: 300,
                 type: 'column'
             },
             title: {
@@ -74,6 +75,9 @@ App.BarChartComponent = Ember.Component.extend({
                         color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
                     }
                 }
+            },
+            credits: {
+                enabled: false
             },
             // legend: {
             //     align: 'right',

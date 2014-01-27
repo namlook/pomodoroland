@@ -156,16 +156,16 @@ App.Pomodoro = DS.Model.extend({
     project: DS.attr('string')
 });
 
-// App.Pomodoro.FIXTURES = [{
-//     id: 1,
-//     createdAt: 'Mon Jan 27 2014 11:42:14 GMT+0100 (CET)'
-// },{
-//     id: 2,
-//     createdAt: 'Mon Jan 27 2014 12:42:14 GMT+0100 (CET)'
-// }, {
-//     id: 3,
-//     createdAt: 'Mon Jan 28 2014 12:42:14 GMT+0100 (CET)'
-// }];
+App.Pomodoro.FIXTURES = [{
+    id: 1,
+    createdAt: 'Mon Jan 27 2014 11:42:14 GMT+0100 (CET)'
+},{
+    id: 2,
+    createdAt: 'Mon Jan 27 2014 12:42:14 GMT+0100 (CET)'
+}, {
+    id: 3,
+    createdAt: 'Mon Jan 26 2014 12:42:14 GMT+0100 (CET)'
+}];
 
 
 

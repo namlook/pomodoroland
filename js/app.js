@@ -23,3 +23,4 @@ App.LSAdapter = DS.LSAdapter.extend({
 });
 
 App.ApplicationAdapter = DS.LSAdapter;
+// App.ApplicationAdapter = DS.FixtureAdapter;
