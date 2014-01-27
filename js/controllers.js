@@ -43,6 +43,25 @@ App.ApplicationController = Ember.Controller.extend({
 
 
     /*
+     * Listen to the timer an trigger this function when the timer is over
+     */
+    onTimerFinished: function() {
+        var model = this.get('model');
+        if(model.get('isStarted') && model.get('remainingSeconds') === 0) {
+            if (model.get('name') === 'pomodoro') {
+                var pomodoro = this.store.createRecord('pomodoro');
+                pomodoro.save();
+                App.notify('Pomodoro finished !', {body: 'time for a break'});
+            }
+            else {
+                App.notify("Break's over", {body: 'get back to work !'});
+            }
+            App.bell.play();
+        }
+    }.observes('model.remainingSeconds'),
+
+
+    /*
      * Is the timer started ?
      */
     isStarted: Ember.computed.alias('model.isStarted'),
@@ -78,3 +97,39 @@ App.ApplicationController = Ember.Controller.extend({
 });
 
 
+App.TodayStatsController = Ember.ArrayController.extend({
+
+    total: function() {
+        return this.get('model.length');
+    }.property('@each')
+
+});
+
+App.WeekStatsController = Ember.ArrayController.extend({
+
+    data: function() {
+        var dataCount = {};
+        this.get('model').forEach(function(obj){
+            var date = new Date(obj.get('createdAt')).toDateString();
+            if (!dataCount[date]) {
+                dataCount[date] = 0;
+            }
+            dataCount[date] += 1;
+        });
+
+        var columnNames = [];
+        var columnData = [];
+        _.pairs(dataCount).forEach(function(pair) {
+            columnNames.push(pair[0]);
+            columnData.push(pair[1]);
+        });
+        columnData = [{data: columnData}];
+
+        return {'columnNames': columnNames, 'columnData': columnData};
+
+    }.property('@each'),
+
+    columnNames: Ember.computed.alias('data.columnNames'),
+    columnData: Ember.computed.alias('data.columnData')
+
+});

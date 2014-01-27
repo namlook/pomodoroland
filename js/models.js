@@ -6,14 +6,14 @@
 App.Timer = Ember.Object.extend({
 
     init: function() {
-        var storedTimer = JSON.parse(localStorage.getItem('timer'));
-        if (storedTimer) {
-            var delta = (Date.now() - storedTimer.startedAt) / 1000;
-            if (storedTimer.duration - delta > 0) {
-                var newDuration = parseInt(storedTimer.duration - delta, 10);
-                this.start({duration: newDuration, name: storedTimer.name});
-            }
-        }
+        // var storedTimer = JSON.parse(localStorage.getItem('timer'));
+        // if (storedTimer) {
+        //     var delta = (Date.now() - storedTimer.startedAt) / 1000;
+        //     if (storedTimer.duration - delta > 0) {
+        //         var newDuration = parseInt(storedTimer.duration - delta, 10);
+        //         this.start({duration: newDuration, name: storedTimer.name});
+        //     }
+        // }
     },
 
     duration: 0,
@@ -28,9 +28,8 @@ App.Timer = Ember.Object.extend({
         clearInterval(this._interval);
         this._interval = null;
         this.set('duration', 0);
-        this.set('remainingSeconds', 0);
         this.set('isStarted', false);
-        this.set('name', null);
+        this.set('remainingSeconds', 0);
         this.delete();
     },
 
@@ -49,7 +48,6 @@ App.Timer = Ember.Object.extend({
         this.set('remainingSeconds', options.duration);
         this.set('name', options.name);
         this.set('isStarted', true);
-
         this.save();
 
         clearInterval(this._interval);
@@ -60,7 +58,6 @@ App.Timer = Ember.Object.extend({
                 that.decrementProperty('remainingSeconds');
             }
             else {
-                that.onFinished(that.get('name'));
                 that.stop();
             }
         }, 1000);
@@ -78,13 +75,7 @@ App.Timer = Ember.Object.extend({
 
     delete: function() {
         localStorage.removeItem('timer');
-    },
-
-    /*
-     * Hook to apply some logic when the timer is over.
-     * The name of the timer is passed.
-     */
-    onFinished: function(name){}
+    }
 });
 
 
@@ -94,36 +85,37 @@ App.Timer = Ember.Object.extend({
  * Stores the total of pomodoros since the last reset
  *
  */
-App.Stats = Ember.Object.extend({
+// App.Stats = Ember.Object.extend({
 
-    init: function() {
-        // setup the pomodors
-        var nbPomodoros = parseInt(localStorage.getItem('stats'), 10);
-        if (nbPomodoros > 0) {
-            this.set('total', nbPomodoros);
-        }
-    },
+//     init: function() {
+//         // setup the pomodors
+//         var nbPomodoros = parseInt(localStorage.getItem('stats'), 10);
+//         if (nbPomodoros > 0) {
+//             this.set('total', nbPomodoros);
+//         }
+//     },
 
-    total: 0,
+//     total: 0,
 
-    /*
-     * Clear the number of pomodoros and update localStorage
-     */
-    clear: function() {
-        this.set('total', 0);
-    },
 
-    /*
-     * Increment the number of pomodoros and update localStorage
-     */
-    add: function() {
-        this.incrementProperty('total');
-    },
+//      * Clear the number of pomodoros and update localStorage
 
-    save: function() {
-        localStorage.setItem('stats', this.get('total'));
-    }.observes('total'),
-});
+//     clear: function() {
+//         this.set('total', 0);
+//     },
+
+//     /*
+//      * Increment the number of pomodoros and update localStorage
+//      */
+//     add: function() {
+//         this.incrementProperty('total');
+//     },
+
+//     save: function() {
+//         localStorage.setItem('stats', this.get('total'));
+//     }.observes('total'),
+// });
+
 
 
 /*
@@ -153,4 +145,28 @@ App.Settings = Ember.Object.extend({
         localStorage.setItem('settings', JSON.stringify(properties));
     }
 });
+
+/*
+ * Pomodoros
+ */
+App.Pomodoro = DS.Model.extend({
+    createdAt: DS.attr('string', {
+      defaultValue: function() { return new Date(); }
+    }),
+    project: DS.attr('string')
+});
+
+// App.Pomodoro.FIXTURES = [{
+//     id: 1,
+//     createdAt: 'Mon Jan 27 2014 11:42:14 GMT+0100 (CET)'
+// },{
+//     id: 2,
+//     createdAt: 'Mon Jan 27 2014 12:42:14 GMT+0100 (CET)'
+// }, {
+//     id: 3,
+//     createdAt: 'Mon Jan 28 2014 12:42:14 GMT+0100 (CET)'
+// }];
+
+
+
 

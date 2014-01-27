@@ -1,6 +1,7 @@
 
 App.Router.map(function() {
-    this.route('today', {path: '/'});
+    this.route('today-stats', {path: '/'});
+    this.route('week-stats', {path: '/week'});
     this.route('settings', {path: '/settings'});
 });
 
@@ -10,23 +11,36 @@ App.ApplicationRoute = Ember.Route.extend({
         return App.timer;
     },
 
+
     actions: {
         reset: function() {
             App.stats.clear();
         },
         closeModal: function() {
-            this.transitionTo('today');
+            this.transitionTo('today-stats');
         }
     }
 });
 
 App.IndexRoute = Ember.Route.extend({
     redirect: function(){
-        this.transitionTo('today');
+        this.transitionTo('today-stats');
     },
 });
 
-App.TodayRoute = Ember.Route.extend({
+App.TodayStatsRoute = Ember.Route.extend({
+    model: function() {
+        return this.store.find('pomodoro');
+    }
+});
+
+App.WeekStatsRoute = Ember.Route.extend({
+    model: function() {
+        return this.store.find('pomodoro');
+    }
+});
+
+App.TodayOldRoute = Ember.Route.extend({
     model: function() {
         return App.stats;
     }

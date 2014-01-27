@@ -1,21 +1,29 @@
 
 #countdown {
     font-size: 6em;
-    text-align: center;
+    /*text-align: center;*/
 }
 
-#ctrlView {
-    text-align: center;
+/*#ctrlView button {
+    padding: 1rem;
+}
+*/
+.button.active {
+    background: #ccc;
 }
 
+.timer .button-group, .timer .button-bar{
+    display: inline-block;
+    margin-bottom: 20px;
+}
 
 label {
     display: inline;
 }
 
 .pomodoros{
-    margin-top: 40px;
     text-align: center;
+    margin-bottom: 60px;
 }
 
 .muted {

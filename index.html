@@ -30,18 +30,29 @@
 
   <script type="text/x-handlebars">
     <div class="row">
-      <div class="small-12 small-centered columns">
+      <div class="small-12 small-centered text-center columns">
 
-        <h1 id="countdown">{{duration}}</h1>
+        <div class="timer">
+          <h1 id="countdown">{{duration}}</h1>
 
-        <div id="ctrlView">
-            <button {{action 'start'}} {{bind-attr disabled=isStarted}}>start
-            </button><button {{action 'shortBreak'}} {{bind-attr disabled=isStarted}}>break
-            </button><button {{action 'longBreak'}} {{bind-attr disabled=isStarted}}>long break
-            </button><button {{action 'stop'}} {{bind-attr disabled=isStopped}}>stop</button>
-            <br />
-            {{#link-to 'settings' classNames='muted'}}settings{{/link-to}}
+          <div class="button-group">
+              <button {{action 'start'}} {{bind-attr disabled=isStarted}}>start
+              </button><button {{action 'shortBreak'}} {{bind-attr disabled=isStarted}}>break
+              </button><button {{action 'longBreak'}} {{bind-attr disabled=isStarted}}>long break
+              </button><button {{action 'stop'}} {{bind-attr disabled=isStopped}}>stop</button>
+              <br />
+          </div>
+          <br />
+
+          <div class="button-bar">
+            <ul class="button-group round">
+              <li>{{#link-to 'today-stats' classNames='tiny button secondary'}}today{{/link-to}}</li>
+              <li>{{#link-to 'week-stats' classNames='tiny button secondary'}}week{{/link-to}}</li>
+              <li>{{#link-to 'settings' classNames='tiny button secondary'}}settings{{/link-to}}</li>
+            </ul>
+          </div>
         </div>
+
 
         {{outlet}}
 
@@ -51,7 +62,20 @@
   </script>
 
 
-  <script type="text/x-handlebars" data-template-name="today">
+
+  <script type="text/x-handlebars" data-template-name="today-stats">
+    <div class="pomodoros">
+      <h1 class="title">{{total}} pomodoros</h1>
+    </div>
+  </script>
+
+
+  <script type="text/x-handlebars" data-template-name="week-stats">
+    {{#bar-chart name='weekStats' columnNames=columnNames columnData=columnData}} {{/bar-chart}}
+  </script>
+
+
+  <script type="text/x-handlebars" data-template-name="todayOld">
     <div class="pomodoros">
       <h1 class="title">{{total}} pomodoros</h1>
     </div>
@@ -59,6 +83,35 @@
 
 
   <script type="text/x-handlebars" data-template-name="settings">
+    <div class="text-left">
+      <form>
+
+        <label>Show dynamic title</label>
+        {{input type="checkbox" checked=model.dynamicTitle}}
+
+        <fieldset>
+          <legend>Durations</legend>
+
+          <label class="inline">Pomodoro</label>
+          {{input type='number' value=model.pomodoroDuration}}
+
+          <label>short break</label>
+          {{input type='number' value=model.shortBreakDuration}}
+
+          <label>long break</label>
+          {{input type='number' value=model.longBreakDuration}}
+
+          </fieldset>
+
+      </form>
+
+      <div class="small-12 text-right columns">
+        {{confirm-button title="reset pomodoros" action="resetPomodoros"}}
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="settingsOld">
     {{#modal-dialog action='closeModal' name="settings"}}
       <h1>Settings</h1>
       <form>
@@ -96,6 +149,38 @@
       <a {{action 'closeModal'}} class="close-reveal-modal">&#215;</a>
   </script>
 
+
+  <script type="text/x-handlebars" id="components/off-canvas">
+    <div class="off-canvas-wrap">
+      <div class="inner-wrap">
+
+        <a class="left-off-canvas-toggle" >Menu</a>
+
+        <!-- Off Canvas Menu -->
+        <aside class="left-off-canvas-menu">
+            <!-- whatever you want goes here -->
+            <ul>
+              <li><a href="#">Item 1</a></li>
+            ...
+            </ul>
+        </aside>
+
+        <!-- main content goes here -->
+        <p>Set in the year 0 F.E. ("Foundation Era"), The Psychohistorians opens on Trantor, the capital of the 12,000-year-old Galactic Empire. Though the empire appears stable and powerful, it is slowly decaying in ways that parallel the decline of the Western Roman Empire. Hari Seldon, a mathematician and psychologist, has developed psychohistory, a new field of science and psychology that equates all possibilities in large societies to mathematics, allowing for the prediction of future events.</p>
+
+      <!-- close the off-canvas menu -->
+      <a class="exit-off-canvas"></a>
+
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="components/bar-chart">
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+  </script>
+
+
+
   <script type="text/x-handlebars" id="components/confirm-button">
     {{#if inConfirmationMode}}
       {{confirmTitle}}
@@ -114,7 +199,10 @@
 
   <script src="js/libs/handlebars-1.1.2.js"></script>
   <script src="js/libs/ember-1.3.1.js"></script>
+  <script src="js/libs/ember-data.js"></script>
+  <script src="js/vendors/localstorage_adapter.js"></script>
 
+  <script src="js/vendors/underscore-min.js"></script>
   <script src="js/vendors/underscore.string.min.js"></script>
 
   <script src="js/app.js"></script>
@@ -123,6 +211,10 @@
   <script src="js/controllers.js"></script>
   <script src="js/components.js"></script>
   <script src="js/utils.js"></script>
+
+
+  <script src="http://code.highcharts.com/highcharts.js"></script>
+  <script src="http://code.highcharts.com/modules/exporting.js"></script>
 
   <!-- to activate the test runner, add the "?test" query string parameter -->
   <script src="tests/runner.js"></script>
