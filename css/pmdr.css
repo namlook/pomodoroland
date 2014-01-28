@@ -14,7 +14,10 @@
 
 .timer .button-group, .timer .button-bar{
     display: inline-block;
-    margin-bottom: 20px;
+}
+
+.today {
+    margin-top: 20px;
 }
 
 label {

@@ -2,6 +2,7 @@
 App.Router.map(function() {
     this.route('today-stats', {path: '/'});
     this.route('week-stats', {path: '/week'});
+    this.route('month-stats', {path: '/month'});
     this.route('settings', {path: '/settings'});
 });
 
@@ -30,6 +31,15 @@ App.TodayStatsRoute = Ember.Route.extend({
 });
 
 App.WeekStatsRoute = Ember.Route.extend({
+    model: function() {
+        var userKey = App.settings.get('parseKey');
+        return this.store.filter('pomodoro', { userKey: userKey}, function(pomodoro) {
+              return pomodoro.get('userKey') === userKey;
+        });
+    }
+});
+
+App.MonthStatsRoute = Ember.Route.extend({
     model: function() {
         var userKey = App.settings.get('parseKey');
         return this.store.filter('pomodoro', { userKey: userKey}, function(pomodoro) {

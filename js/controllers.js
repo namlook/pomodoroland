@@ -42,10 +42,15 @@ App.ApplicationController = Ember.Controller.extend({
         var model = this.get('model');
         if(model.get('isStarted') && model.get('remainingSeconds') === 0) {
             if (model.get('name') === 'pomodoro') {
-                var pomodoro = this.store.createRecord('pomodoro', {
+                this._pomodoro = this.store.createRecord('pomodoro', {
                     userKey: App.settings.get('parseKey')
                 });
-                pomodoro.save();
+                if (App.settings.get('multiProjects')) {
+                    this.set('showProjectModal', true);
+                } else {
+                    this._pomodoro.set('project', null);
+                    this._pomodoro.save();
+                }
                 App.notify('Pomodoro finished !', {body: 'time for a break'});
             }
             else {
@@ -54,7 +59,6 @@ App.ApplicationController = Ember.Controller.extend({
             App.bell.play();
         }
     }.observes('model.remainingSeconds'),
-
 
     /*
      * Is the timer started ?
@@ -87,6 +91,11 @@ App.ApplicationController = Ember.Controller.extend({
         },
         stop: function() {
             this.get('model').stop();
+        },
+        closeModal: function() {
+            this.set('showProjectModal', false);
+            this._pomodoro.set('project', this.get('projectName'));
+            this._pomodoro.save();
         }
     }
 });
@@ -102,6 +111,10 @@ App.TodayStatsController = Ember.ArrayController.extend({
 
 App.WeekStatsController = Ember.ArrayController.extend({
 
+    total: function() {
+        return this.get('model.length');
+    }.property('@each'),
+
     data: function() {
         formatDate = function(date){
             return date.toDateString().split(' ').splice(0, 3).join(' ');
@@ -111,37 +124,96 @@ App.WeekStatsController = Ember.ArrayController.extend({
             columnData = [],
             dataCount = {};
 
-        for (var i=6; i>-1; i--) {
-            var date = new Date();
-            date.setTime(date.getTime() - i * 24 * 60 * 60 * 1000);
-            dataCount[formatDate(date)] = 0;
-        }
+        var thisWeek = new Date().getWeek();
 
         this.get('model').forEach(function(obj){
-            var date = new Date(obj.get('date'));
-            dataCount[formatDate(date)] += 1;
+            var objDate = new Date(obj.get('date'));
+            var project = obj.get('project');
+            if (objDate.getWeek() === thisWeek) {
+                if (!dataCount[project]) {
+                    dataCount[project] = {};
+                }
+                if (!dataCount[project][formatDate(objDate)]) {
+                    dataCount[project][formatDate(objDate)] = 0;
+                }
+                dataCount[project][formatDate(objDate)] += 1;
+            }
         });
 
-        var today = formatDate(new Date());
+        var todayString = formatDate(new Date());
         var yesterday = new Date();
         yesterday.setTime(yesterday.getTime() - 24 * 60 * 60 * 1000);
-        yesterday = formatDate(yesterday);
+        var yesterdayString = formatDate(yesterday);
 
-        _.pairs(dataCount).forEach(function(pair) {
-            if (pair[0] === today){
-                columnNames.push('today');
-            } else if (pair[0] === yesterday) {
-                columnNames.push('yesterday');
-            } else {
-                columnNames.push(pair[0]);
-            }
-            columnData.push(pair[1]);
+        _.pairs(dataCount).forEach(function(projectPair) {
+            var project = projectPair[0];
+            var projectData = {name: project, data: []};
+            _.pairs(projectPair[1]).forEach(function(datePair){
+                var date = datePair[0];
+                var count = datePair[1];
+                columnNames.push(date);
+                projectData.data.push(count);
+            });
+            columnData.push(projectData);
         });
-        columnData = [{data: columnData}];
 
         return {'columnNames': columnNames, 'columnData': columnData};
 
+    }.property('@each.project'),
+
+    columnNames: Ember.computed.alias('data.columnNames'),
+    columnData: Ember.computed.alias('data.columnData')
+
+});
+
+App.MonthStatsController = Ember.ArrayController.extend({
+
+    total: function() {
+        return this.get('model.length');
     }.property('@each'),
+
+    data: function() {
+        formatWeek = function(date){
+            return date.toDateString().split(' ').splice(0, 3).join(' ');
+        };
+
+        var columnNames = [],
+            columnData = [],
+            dataCount = {};
+
+        var today = new Date();
+        var thisMonth = today.getMonth();
+
+        this.get('model').forEach(function(obj){
+            var objDate = new Date(obj.get('date'));
+            var project = obj.get('project');
+            if (objDate.getMonth() === thisMonth) {
+                if (!dataCount[project]) {
+                    dataCount[project] = {};
+                }
+                var weekTitle = 'week '+objDate.getWeek();
+                if (!dataCount[project][weekTitle]) {
+                    dataCount[project][weekTitle] = 0;
+                }
+                dataCount[project][weekTitle] += 1;
+            }
+        });
+        console.log(dataCount);
+        _.pairs(dataCount).forEach(function(projectPair) {
+            var project = projectPair[0];
+            var projectData = {name: project, data: []};
+            _.pairs(projectPair[1]).forEach(function(datePair){
+                var date = datePair[0];
+                var count = datePair[1];
+                columnNames.push(date);
+                projectData.data.push(count);
+            });
+            columnData.push(projectData);
+        });
+        console.log(columnNames, columnData);
+        return {'columnNames': columnNames, 'columnData': columnData};
+
+    }.property('@each.project'),
 
     columnNames: Ember.computed.alias('data.columnNames'),
     columnData: Ember.computed.alias('data.columnData')

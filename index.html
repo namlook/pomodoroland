@@ -35,7 +35,7 @@
         <div class="timer">
           <h1 id="countdown">{{duration}}</h1>
 
-          <div class="button-group">
+          <div class="ctrl button-group">
               <button {{action 'start'}} {{bind-attr disabled=isStarted}}>start
               </button><button {{action 'shortBreak'}} {{bind-attr disabled=isStarted}}>break
               </button><button {{action 'longBreak'}} {{bind-attr disabled=isStarted}}>long break
@@ -43,11 +43,14 @@
               <br />
           </div>
           <br />
+          <br />
+          <br />
 
           <div class="button-bar">
             <ul class="button-group round">
               <li>{{#link-to 'today-stats' classNames='tiny button secondary'}}today{{/link-to}}</li>
-              <li>{{#link-to 'week-stats' classNames='tiny button secondary'}}week{{/link-to}}</li>
+              <li>{{#link-to 'week-stats' classNames='tiny button secondary'}}this week{{/link-to}}</li>
+              <li>{{#link-to 'month-stats' classNames='tiny button secondary'}}this month{{/link-to}}</li>
               <li>{{#link-to 'settings' classNames='tiny button secondary'}}settings{{/link-to}}</li>
             </ul>
           </div>
@@ -55,6 +58,13 @@
 
 
         {{outlet}}
+
+        {{# if showProjectModal}}
+          {{#modal-dialog action='closeModal' name="projectName" show=pomodoroFinished}}
+            <h3>Enter the project name</h3>
+            {{input type='text' value=projectName}}
+          {{/modal-dialog}}
+        {{/if}}
 
       </div>
     </div>
@@ -64,14 +74,25 @@
 
 
   <script type="text/x-handlebars" data-template-name="today-stats">
-    <div class="pomodoros">
+    <div class="pomodoros today">
       <h1 class="title">{{total}} pomodoros</h1>
     </div>
   </script>
 
 
   <script type="text/x-handlebars" data-template-name="week-stats">
-    {{#bar-chart name='weekStats' columnNames=columnNames columnData=columnData}} {{/bar-chart}}
+    <div class="pomodoros">
+      <h3 class='title'>{{total}} pomodoros</h3>
+      {{#bar-chart name='weekStats' title='This week' columnNames=columnNames columnData=columnData}} {{/bar-chart}}
+    </div>
+  </script>
+
+
+  <script type="text/x-handlebars" data-template-name="month-stats">
+    <div class="pomodoros">
+      <h3 class='title'>{{total}} pomodoros</h3>
+      {{#bar-chart name='monthStats' title='This month' columnNames=columnNames columnData=columnData}} {{/bar-chart}}
+    </div>
   </script>
 
 
@@ -82,12 +103,16 @@
   </script>
 
 
+
   <script type="text/x-handlebars" data-template-name="settings">
     <div class="text-left">
       <form>
           <div class="small-6 columns">
             <label>Show dynamic title</label>
             {{input type="checkbox" checked=model.dynamicTitle}}
+            <br />
+            <label>Allow multi projects</label>
+            {{input type="checkbox" checked=model.multiProjects}}
           </div>
 
           <div class="small-6 text-right columns">
@@ -109,7 +134,7 @@
 
           </fieldset>
           <fieldset>
-            <legend>Import/Export</legend>
+            <legend>Cloud backup</legend>
 
             <label>Your private Key</label>
             {{input type='text' value=model.parseKey}}

@@ -61,7 +61,7 @@ App.BarChartComponent = Ember.Component.extend({
                 type: 'column'
             },
             title: {
-                text: 'Last 7 days'
+                text: this.get('title')
             },
             xAxis: {
                 categories: this.get('columnNames')

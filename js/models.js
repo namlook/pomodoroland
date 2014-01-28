@@ -5,6 +5,17 @@
 
 App.Timer = Ember.Object.extend({
 
+    init: function() {
+        var storedTimer = JSON.parse(localStorage.getItem('timer'));
+        if (storedTimer) {
+            var delta = (Date.now() - storedTimer.startedAt) / 1000;
+            if (storedTimer.duration - delta > 0) {
+                var newDuration = parseInt(storedTimer.duration - delta, 10);
+                this.start({duration: newDuration, name: storedTimer.name});
+            }
+        }
+    },
+
     duration: 0,
     remainingSeconds: 0,
     isStarted: false,
@@ -83,6 +94,7 @@ App.Settings = Ember.Object.extend({
     shortBreakDuration: 5,
     longBreakDuration: 15,
     dynamicTitle: true,
+    multiProjects: true,
     parseKey: null,
 
 
@@ -92,6 +104,7 @@ App.Settings = Ember.Object.extend({
             'shortBreakDuration',
             'longBreakDuration',
             'dynamicTitle',
+            'multiProjects',
             'parseKey'
         );
         localStorage.setItem('settings', JSON.stringify(properties));
