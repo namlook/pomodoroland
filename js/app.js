@@ -16,7 +16,15 @@ App = Ember.Application.create({
         }
 
         // if parseKey is in localStorage, use parse.com to store the data
-        if (!JSON.parse(localStorage.getItem('settings')).parseKey) {
+        var parseKey;
+        try {
+            parseKey = JSON.parse(localStorage.getItem('settings')).parseKey;
+        }
+        catch (e) {
+            parseKey = null;
+        }
+
+        if (!parseKey) {
             App.ApplicationAdapter = DS.LSAdapter;
         } else {
             App.ApplicationAdapter = DS.ParseAdapter.extend({
