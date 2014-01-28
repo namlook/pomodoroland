@@ -25,7 +25,7 @@ App.TodayStatsRoute = Ember.Route.extend({
         return this.store.filter('pomodoro', { userKey: userKey}, function(pomodoro) {
             var today = new Date().toDateString();
             var date = new Date(pomodoro.get('date')).toDateString();
-              return pomodoro.get('userKey') === userKey && date === today;
+            return pomodoro.get('userKey') === userKey && date === today;
         });
     }
 });
@@ -33,8 +33,12 @@ App.TodayStatsRoute = Ember.Route.extend({
 App.WeekStatsRoute = Ember.Route.extend({
     model: function() {
         var userKey = App.settings.get('parseKey');
+        var today = new Date();
         return this.store.filter('pomodoro', { userKey: userKey}, function(pomodoro) {
-              return pomodoro.get('userKey') === userKey;
+            var date = new Date(pomodoro.get('date'));
+            return (pomodoro.get('userKey') === userKey) && (
+                date.getWeek() === today.getWeek()) && (
+                date.getFullYear() == today.getFullYear());
         });
     }
 });
@@ -42,8 +46,12 @@ App.WeekStatsRoute = Ember.Route.extend({
 App.MonthStatsRoute = Ember.Route.extend({
     model: function() {
         var userKey = App.settings.get('parseKey');
+        var today = new Date();
         return this.store.filter('pomodoro', { userKey: userKey}, function(pomodoro) {
-              return pomodoro.get('userKey') === userKey;
+              var date = new Date(pomodoro.get('date'));
+              return (pomodoro.get('userKey') === userKey) && (
+                date.getMonth() === today.getMonth()) && (
+                date.getFullYear() == today.getFullYear());
         });
     }
 });
