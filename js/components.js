@@ -79,13 +79,6 @@ App.BarChartComponent = Ember.Component.extend({
             credits: {
                 enabled: false
             },
-            // legend: {
-            //     align: 'right',
-            //     x: -70,
-            //     verticalAlign: 'top',
-            //     y: 20,
-            //     floating: true
-            // },
             tooltip: {
                 formatter: function() {
                     return '<b>'+ this.x +'</b><br/>'+
@@ -98,17 +91,7 @@ App.BarChartComponent = Ember.Component.extend({
                     stacking: 'normal'
                 }
             },
-            series: this.get('columnData'),
-            // [{
-            //     name: 'John',
-            //     data: [5, 3, 4, 7, 2, 0, 3]
-            // }, {
-            //     name: 'Jane',
-            //     data: [2, 2, 3, 2, 1, 0, 4]
-            // }, {
-            //     name: 'Joe',
-            //     data: [3, 4, 4, 2, 5, 3, 3]
-            // }]
+            series: this.get('columnData')
         };
 
         if (this.get('columnData.length') < 2) {
