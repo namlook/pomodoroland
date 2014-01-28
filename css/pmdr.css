@@ -40,6 +40,12 @@ label {
     padding-bottom: 0;
 }
 
+.pie-component.pomodoro {
+    position: relative;
+    top: -70px;
+    z-index: -100;
+}
+
 .reveal-modal.settings {
     top: 0;
     margin-left: 0;

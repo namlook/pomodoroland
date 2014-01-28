@@ -43,12 +43,12 @@ App.ApplicationController = Ember.Controller.extend({
         if(model.get('isStarted') && model.get('remainingSeconds') === 0) {
             if (model.get('name') === 'pomodoro') {
                 this._pomodoro = this.store.createRecord('pomodoro', {
-                    userKey: App.settings.get('parseKey')
+                    userKey: App.settings.get('parseKey'),
+                    project: null
                 });
                 if (App.settings.get('multiProjects')) {
                     this.set('showProjectModal', true);
                 } else {
-                    this._pomodoro.set('project', null);
                     this._pomodoro.save();
                 }
                 App.notify('Pomodoro finished !', {body: 'time for a break'});
@@ -94,7 +94,13 @@ App.ApplicationController = Ember.Controller.extend({
         },
         closeModal: function() {
             this.set('showProjectModal', false);
-            this._pomodoro.set('project', this.get('projectName'));
+            var projectName = this.get('projectName');
+            if (projectName === '' || projectName === undefined) {
+                projectName = null;
+            }
+            if (projectName !== this._pomodoro.get('project')) {
+                this._pomodoro.set('project', projectName);
+            }
             this._pomodoro.save();
         }
     }
@@ -103,9 +109,28 @@ App.ApplicationController = Ember.Controller.extend({
 
 App.TodayStatsController = Ember.ArrayController.extend({
 
-    total: function() {
-        return this.get('model.length');
-    }.property('@each')
+    total: Ember.computed.alias('model.length'),
+
+    projects: Ember.computed(function(){
+        return this.get('model').getEach('project').uniq();
+    }).property('@each.project'),
+
+    nbProjects: Ember.computed.alias('projects.length'),
+    hasMultiProjects: Ember.computed.gt('nbProjects', 1),
+
+    pieData: function() {
+        var data = {};
+        this.get('model').getEach('project').forEach(function(project) {
+            if (project === '' || project === null) {
+                project = 'undefined';
+            }
+            if (!data[project]) {
+                data[project] = 0;
+            }
+            data[project] += 1;
+        });
+        return _.pairs(data);
+    }.property('@each.project')
 
 });
 
@@ -129,6 +154,9 @@ App.WeekStatsController = Ember.ArrayController.extend({
         this.get('model').forEach(function(obj){
             var objDate = new Date(obj.get('date'));
             var project = obj.get('project');
+            if (project === null) {
+                project = 'undefined';
+            }
             if (objDate.getWeek() === thisWeek) {
                 if (!dataCount[project]) {
                     dataCount[project] = {};
@@ -187,6 +215,9 @@ App.MonthStatsController = Ember.ArrayController.extend({
         this.get('model').forEach(function(obj){
             var objDate = new Date(obj.get('date'));
             var project = obj.get('project');
+            if (project === null) {
+                project = 'undefined';
+            }
             if (objDate.getMonth() === thisMonth) {
                 if (!dataCount[project]) {
                     dataCount[project] = {};
@@ -198,7 +229,6 @@ App.MonthStatsController = Ember.ArrayController.extend({
                 dataCount[project][weekTitle] += 1;
             }
         });
-        console.log(dataCount);
         _.pairs(dataCount).forEach(function(projectPair) {
             var project = projectPair[0];
             var projectData = {name: project, data: []};
@@ -210,7 +240,6 @@ App.MonthStatsController = Ember.ArrayController.extend({
             });
             columnData.push(projectData);
         });
-        console.log(columnNames, columnData);
         return {'columnNames': columnNames, 'columnData': columnData};
 
     }.property('@each.project'),

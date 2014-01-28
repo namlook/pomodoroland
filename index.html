@@ -74,10 +74,15 @@
 
 
   <script type="text/x-handlebars" data-template-name="today-stats">
-    <div class="pomodoros today">
-      <h1 class="title">{{total}} pomodoros</h1>
+    <div class="pomodoros tody">
+      {{#if hasMultiProjects}}
+        {{#pie-chart name='pomodoro' values=pieData total=total}}{{/pie-chart}}
+      {{else}}
+        {{#gauge-chart name='pomodoro' value=total}}{{/gauge-chart}}
+      {{/if}}
     </div>
   </script>
+
 
 
   <script type="text/x-handlebars" data-template-name="week-stats">
@@ -137,12 +142,6 @@
 
 
     </div>
-  </script>
-
-  <script type="text/x-handlebars" data-template-name="settingsOld">
-    {{#modal-dialog action='closeModal' name="settings"}}
-        {{confirm-button title="reset pomodoros" action="resetPomodoros"}}
-    {{/modal-dialog}}
   </script>
 
 
@@ -215,6 +214,7 @@
   <script src="js/vendors/underscore.string.min.js"></script>
 
   <script src="js/vendors/highcharts.js"></script>
+  <script src="js/vendors/highcharts-more.js"></script>
 
   <!-- to activate the test runner, add the "?test" query string parameter -->
   <script src="tests/runner.js"></script>
