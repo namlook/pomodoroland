@@ -22,7 +22,9 @@ App.TodayStatsRoute = Ember.Route.extend({
     model: function() {
         var userKey = App.settings.get('parseKey');
         return this.store.filter('pomodoro', { userKey: userKey}, function(pomodoro) {
-              return pomodoro.get('userKey') === userKey;
+            var today = new Date().toDateString();
+            var date = new Date(pomodoro.get('date')).toDateString();
+              return pomodoro.get('userKey') === userKey && date === today;
         });
     }
 });
