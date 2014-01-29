@@ -41,3 +41,10 @@ Date.prototype.getWeek = function() {
     return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
 };
 
+
+Date.prototype.getFirstWeekDay = function(){
+    var now = new Date();
+    var startDay = 1; // monday
+    return new Date(now.valueOf() - (
+        now.getDay()<=0 ? 7-startDay:now.getDay()-startDay)*86400000);
+};
