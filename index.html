@@ -78,7 +78,6 @@
 
   <script type="text/x-handlebars" data-template-name="pomodoros/today-stats">
     <div class="pomodoros tody">
-      <p>{{remainingSeconds}} seconds</p>
       {{#if hasMultiProjects}}
         {{#pie-chart name='pomodoro' values=pieData total=total}}{{/pie-chart}}
       {{else}}
