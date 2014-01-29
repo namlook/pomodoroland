@@ -23,20 +23,6 @@ App = Ember.Application.create({
         catch (e) {
             parseKey = null;
         }
-
-        if (!parseKey) {
-            App.ApplicationAdapter = DS.LSAdapter;
-        } else {
-            App.ApplicationAdapter = DS.ParseAdapter.extend({
-                applicationId: '8fzGpo1z0od9jzGRL73tjSycywhXjJ3QdrnRodBI',
-                restApiId: 'x1GySv7rY8P1eszs2C2ghMcSnmZOVLXmS2Ievjge',
-                javascriptId: '35DWYmsUPhScAniTuOGoyWKdUtGhCKu1roeE2Up0'
-            });
-        }
+        App.storage = App.Storage(parseKey);
     }
-});
-
-
-App.LSAdapter = DS.LSAdapter.extend({
-    namespace: 'emberodoro'
 });

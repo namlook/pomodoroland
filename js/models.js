@@ -116,13 +116,9 @@ App.Settings = Ember.Object.extend({
 /*
  * Pomodoros
  */
-App.Pomodoro = DS.ParseModel.extend({
-
-    project: DS.attr('string'),
-    userKey: DS.attr('string'),
-    date: DS.attr('string', {
-      defaultValue: function() { return new Date(); }
-    })
+App.Pomodoro = Ember.Object.extend({
+    project: null,
+    date: null
 });
 
 

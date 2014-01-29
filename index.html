@@ -48,9 +48,9 @@
 
           <div class="button-bar">
             <ul class="button-group round">
-              <li>{{#link-to 'today-stats' classNames='tiny button secondary'}}today{{/link-to}}</li>
-              <li>{{#link-to 'week-stats' classNames='tiny button secondary'}}this week{{/link-to}}</li>
-              <li>{{#link-to 'month-stats' classNames='tiny button secondary'}}this month{{/link-to}}</li>
+              <li>{{#link-to 'pomodoros.today-stats' classNames='tiny button secondary'}}today{{/link-to}}</li>
+              <li>{{#link-to 'pomodoros.week-stats' classNames='tiny button secondary'}}this week{{/link-to}}</li>
+              <li>{{#link-to 'pomodoros.month-stats' classNames='tiny button secondary'}}this month{{/link-to}}</li>
               <li>{{#link-to 'settings' classNames='tiny button secondary'}}settings{{/link-to}}</li>
             </ul>
           </div>
@@ -76,8 +76,9 @@
   </script>
 
 
-  <script type="text/x-handlebars" data-template-name="today-stats">
+  <script type="text/x-handlebars" data-template-name="pomodoros/today-stats">
     <div class="pomodoros tody">
+      <p>{{remainingSeconds}} seconds</p>
       {{#if hasMultiProjects}}
         {{#pie-chart name='pomodoro' values=pieData total=total}}{{/pie-chart}}
       {{else}}
@@ -88,7 +89,7 @@
 
 
 
-  <script type="text/x-handlebars" data-template-name="week-stats">
+  <script type="text/x-handlebars" data-template-name="pomodoros/week-stats">
     <div class="pomodoros">
       <h3 class='title'>{{total}} pomodoros</h3>
       {{#bar-chart name='weekStats' title='This week' columnNames=columnNames columnData=columnData}} {{/bar-chart}}
@@ -96,7 +97,7 @@
   </script>
 
 
-  <script type="text/x-handlebars" data-template-name="month-stats">
+  <script type="text/x-handlebars" data-template-name="pomodoros/month-stats">
     <div class="pomodoros">
       <h3 class='title'>{{total}} pomodoros</h3>
       {{#bar-chart name='monthStats' title='This month' columnNames=columnNames columnData=columnData}} {{/bar-chart}}
@@ -200,6 +201,7 @@
   <script src="js/libs/ember-data.js"></script>
   <script src="js/vendors/localstorage_adapter.js"></script>
   <script src="js/vendors/ember-parse-adapter-0.5.1.min.js"></script>
+  <script src="https://raw.github.com/srhyne/jQuery-Parse/master/jquery.parse.js"></script>
 
   <script src="js/vendors/underscore-min.js"></script>
   <script src="js/vendors/underscore.string.min.js"></script>

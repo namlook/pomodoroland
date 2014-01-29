@@ -113,7 +113,7 @@ App.BarChartComponent = Ember.Component.extend({
     updateData: function() {
         var that = this;
         this.get('columnData').forEach(function(data, index) {
-            if(!that._chart.series[index].data.length) {
+            if(!that._chart.series[index]) {
                 that._chart = new Highcharts.Chart(that.getConfig());
             } else {
                 that._chart.series[index].setData(data.data, false);

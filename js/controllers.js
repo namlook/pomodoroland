@@ -10,6 +10,20 @@ App.SettingsController = Ember.Controller.extend({
 
 
 App.ApplicationController = Ember.Controller.extend({
+    needs: ['pomodoros'],
+
+    pomodoros: Ember.computed.alias('controllers.pomodoros'),
+
+    savePomodoro: function(projectName) {
+        var pomodoros = this.get('pomodoros');
+        var pomodoro = {
+            date: Date.now(),
+            project: projectName || 'undefined'
+        };
+        App.storage.insert('pomodoro', pomodoro);
+        pomodoros.pushObject(App.Pomodoro.create(pomodoro));
+    },
+
     /*
      * Pretty display the remaining seconds
      */
@@ -42,14 +56,10 @@ App.ApplicationController = Ember.Controller.extend({
         var model = this.get('model');
         if(model.get('isStarted') && model.get('remainingSeconds') === 0) {
             if (model.get('name') === 'pomodoro') {
-                this._pomodoro = this.store.createRecord('pomodoro', {
-                    userKey: App.settings.get('parseKey'),
-                    project: null
-                });
                 if (App.settings.get('multiProjects')) {
                     this.set('showProjectModal', true);
                 } else {
-                    this._pomodoro.save();
+                    this.savePomodoro();
                 }
                 App.notify('Pomodoro finished !', {body: 'time for a break'});
             }
@@ -94,20 +104,14 @@ App.ApplicationController = Ember.Controller.extend({
         },
         closeModal: function() {
             this.set('showProjectModal', false);
-            var projectName = this.get('projectName');
-            if (projectName === '' || projectName === undefined) {
-                projectName = null;
-            }
-            if (projectName !== this._pomodoro.get('project')) {
-                this._pomodoro.set('project', projectName);
-            }
-            this._pomodoro.save();
+            this.savePomodoro(this.get('projectName'));
         }
     }
 });
 
+App.PomodorosController = Ember.ArrayController.extend({});
 
-App.TodayStatsController = Ember.ArrayController.extend({
+App.PomodorosTodayStatsController = Ember.ArrayController.extend({
 
     total: Ember.computed.alias('model.length'),
 
@@ -134,7 +138,7 @@ App.TodayStatsController = Ember.ArrayController.extend({
 
 });
 
-App.WeekStatsController = Ember.ArrayController.extend({
+App.PomodorosWeekStatsController = Ember.ArrayController.extend({
 
     total: function() {
         return this.get('model.length');
@@ -194,7 +198,7 @@ App.WeekStatsController = Ember.ArrayController.extend({
 
 });
 
-App.MonthStatsController = Ember.ArrayController.extend({
+App.PomodorosMonthStatsController = Ember.ArrayController.extend({
 
     total: function() {
         return this.get('model.length');

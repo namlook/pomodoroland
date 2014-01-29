@@ -48,3 +48,61 @@ Date.prototype.getFirstWeekDay = function(){
     return new Date(now.valueOf() - (
         now.getDay()<=0 ? 7-startDay:now.getDay()-startDay)*86400000);
 };
+
+
+
+App.Storage = function(userkey) {
+    $.parse.init({
+        app_id : "8fzGpo1z0od9jzGRL73tjSycywhXjJ3QdrnRodBI",
+        rest_key : "x1GySv7rY8P1eszs2C2ghMcSnmZOVLXmS2Ievjge"
+    });
+
+    var store = Ember.A([]);
+
+    var getLocalStorage = function() {
+        var store;
+        try {
+            store = JSON.parse(localStorage.getItem('Emberodoro')).store;
+        }
+        catch (e){
+            store = [];
+        }
+        return store;
+    };
+
+    var saveToLocalStorage = function(data) {
+        localStorage.setItem('Emberodoro', JSON.stringify({store:data}));
+    };
+
+    return {
+        insert: function(type, item) {
+            if (userkey) {
+                item.userKey = App.settings.get('parseKey');
+                $.parse.post(type, item);
+            } else {
+                var data = getLocalStorage();
+                data.pushObject(item);
+                saveToLocalStorage(data);
+            }
+        },
+        find: function(type, query) {
+            var results = Ember.A([]);
+            if (userkey) {
+                var userKey = App.settings.get('parseKey');
+                $.parse.get(type, {where: {userKey: userKey}}, function(data){
+                    data.results.forEach(function(item){
+                        var obj = App[type.capitalize()].create(item);
+                        results.pushObject(obj);
+                    });
+                });
+            } else {
+                var data = getLocalStorage();
+                data.forEach(function(item){
+                    results.push(App.Pomodoro.create(item));
+                });
+            }
+            return results;
+        }
+    };
+};
+
