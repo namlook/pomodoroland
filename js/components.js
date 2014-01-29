@@ -52,13 +52,17 @@ App.BarChartComponent = Ember.Component.extend({
     name: 'modalDialog',
 
     columnNames: [],
-    columnData: [],
+    columnData: [{data: []}],
 
     didInsertElement: function() {
-        var $container = $('.bar-chart.'+this.get('name'));
+        this.$container = $('.bar-chart.'+this.get('name'));
+        this._chart = new Highcharts.Chart(this.getConfig());
+    },
+
+    getConfig: function($container) {
         var config = {
             chart: {
-                renderTo: $container[0],
+                renderTo: this.$container[0],
                 height: 300,
                 type: 'column'
             },
@@ -93,22 +97,29 @@ App.BarChartComponent = Ember.Component.extend({
                     stacking: 'normal'
                 }
             },
-            series: this.get('columnData')
         };
-
+        if (!this.get('columnData').length) {
+            config.series = [{data:[]}];
+        } else {
+            config.series = this.get('columnData');
+        }
         if (this.get('columnData.length') < 2) {
             config.legend = false;
             config.tooltip = false;
         }
-        this._chart = new Highcharts.Chart(config);
+        return config;
     },
 
     updateData: function() {
         var that = this;
         this.get('columnData').forEach(function(data, index) {
-            that._chart.series[index].setData(data.data);
-            that._chart.series[index].update({name:data.name}, false);
-            that._chart.redraw();
+            if(!that._chart.series[index].data.length) {
+                that._chart = new Highcharts.Chart(that.getConfig());
+            } else {
+                that._chart.series[index].setData(data.data, false);
+                that._chart.series[index].update({name:data.name}, false);
+                that._chart.redraw();
+            }
         });
     }.observes('columnData')
 });
@@ -123,6 +134,7 @@ App.GaugeChartComponent = Ember.Component.extend({
         var config = {
             chart: {
                 renderTo: $container[0],
+                height: 300,
                 type: 'gauge'
             },
 
