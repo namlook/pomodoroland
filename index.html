@@ -140,8 +140,9 @@
             {{view Ember.Select content=storageLayers value=model.selectedStorage}}
 
             {{#if useCloud}}
-              <label>Your private Key</label>
-              {{input type='text' value=model.parseKey}}
+              <label>Your private key
+              <span class="muted">(parse.com will be used to store the data)</span> </label>
+              {{input type='text' value=model.parseKey placeholder="choose something hard to find (like: '&bob-123')"}}
             {{/if}}
 
           </fieldset>
