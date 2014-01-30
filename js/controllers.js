@@ -187,7 +187,8 @@ App.PomodorosWeekStatsController = Ember.ArrayController.extend(App.PomodorosMix
             columnData = [],
             dataCount = {};
 
-        var thisWeek = new Date().getWeek();
+        var today = new Date();
+        var thisWeek = today.getWeek();
 
         this.get('model').forEach(function(obj){
             var objDate = new Date(obj.get('date'));
@@ -207,7 +208,7 @@ App.PomodorosWeekStatsController = Ember.ArrayController.extend(App.PomodorosMix
         });
 
         var todayString = formatDate(new Date());
-        var yesterday = new Date();
+        var yesterday = new Date(today.toDateString());
         yesterday.setTime(yesterday.getTime() - 24 * 60 * 60 * 1000);
         var yesterdayString = formatDate(yesterday);
 
@@ -217,6 +218,11 @@ App.PomodorosWeekStatsController = Ember.ArrayController.extend(App.PomodorosMix
             _.pairs(projectPair[1]).forEach(function(datePair){
                 var date = datePair[0];
                 var count = datePair[1];
+                if (date === todayString) {
+                    date = 'today';
+                } else if (date === yesterdayString) {
+                    date = 'yesterday';
+                }
                 columnNames.push(date);
                 projectData.data.push(count);
             });
