@@ -29,6 +29,11 @@ label {
     color: #fff;
 }
 
+.main-section {
+    position: relative;
+    top: -35px;
+}
+
 .text-white {
     color: #ccc;
 }
@@ -44,6 +49,8 @@ label {
 
 .about {
     padding: 15px;
+    position: relative;
+    z-index: 10;
 }
 
 .pomodoros .title {
