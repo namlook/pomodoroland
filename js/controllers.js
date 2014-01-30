@@ -45,7 +45,7 @@ App.ApplicationController = Ember.Controller.extend({
      * Allow the title to display the duration in real time
      */
     updateTitle: function() {
-        var title = 'Emberodoro';
+        var title = 'Pomodoroland';
         if (App.settings.get('dynamicTitle')) {
             title = this.get('duration');
         }

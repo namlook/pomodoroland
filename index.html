@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Emberodoro</title>
+  <title>Pomodoroland</title>
 
   <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
   <meta name = "viewport" content = "initial-scale = 1.0, user-scalable = no">
@@ -30,42 +30,104 @@
 
 
   <script type="text/x-handlebars">
-    <div class="row">
-      <div class="small-12 small-centered text-center columns">
+    <div class="off-canvas-wrap">
+      <div class="inner-wrap">
 
-        <div class="timer">
-          <h1 id="countdown">{{duration}}</h1>
-
-          <div class="ctrl button-group">
-              <button {{action 'start'}} {{bind-attr disabled=isStarted}}>start
-              </button><button {{action 'shortBreak'}} {{bind-attr disabled=isStarted}}>break
-              </button><button {{action 'longBreak'}} {{bind-attr disabled=isStarted}}>long break
-              </button><button {{action 'stop'}} {{bind-attr disabled=isStopped}}>stop</button>
-              <br />
-          </div>
-          <br />
-          <br />
-          <br />
-
-          <div class="button-bar">
-            <ul class="button-group round">
-              <li>{{#link-to 'pomodoros.today-stats' classNames='tiny button secondary'}}today{{/link-to}}</li>
-              <li>{{#link-to 'pomodoros.week-stats' classNames='tiny button secondary'}}this week{{/link-to}}</li>
-              <li>{{#link-to 'pomodoros.month-stats' classNames='tiny button secondary'}}this month{{/link-to}}</li>
-              <li>{{#link-to 'settings' classNames='tiny button secondary'}}settings{{/link-to}}</li>
-            </ul>
-          </div>
+        <div class="row">
+          <a class="muted about right right-off-canvas-toggle" >about</a>
         </div>
 
 
-        {{outlet}}
+        <aside class="right-off-canvas-menu">
+          <div class="about-panel">
+            <h3 class="header text-white">Pomodoroland</h3>
+            <p class="subheader">
+              Pomodoroland is a simple but powerful pomodoro tracker
+            </p>
+            <p class="subheader">
+              <strong>Note that you need a very modern browser to use it.</strong>
+            </p>
+            <br />
 
-        {{# if showProjectModal}}
-          {{#modal-dialog action='closeModal' name="projectName" show=pomodoroFinished}}
-            <h3>Enter the project name</h3>
-            {{input type='text' value=projectName}}
-          {{/modal-dialog}}
-        {{/if}}
+            <h4 class="header text-white">Credit</h4>
+            <p class="subheader">
+              &copy; 2014 -
+              <a href="http://twitter.com/namlook" target="_blank">Namlook</a>
+            </p>
+            <br />
+
+            <h4 class="header text-white">History</h4>
+            <p class="subheader">
+              I created Pomodoroland in order to learn
+              <a href="http://emberjs.com" target="_blank">Ember.js</a>.
+              This project started as a fork of
+              <a href="http://github.com/namlook/pmdr" target="_blank">Pmdr</a>,
+              a little project I made during a coding session with
+              <a href="http://twitter.com/thibaultj" target="_blank">@thibaultj</a>
+            </p>
+            <br />
+
+            <h4 class="header text-white">Like it ?</h4>
+            <p class="subheader">Spread the world.</p>
+            <p class="subheader"> And, yeah, Pomodoroland is open source !
+              <a href="http://github.com/namlook/pomodoroland" target="_blank">
+                Fork it on github
+              </a>
+            </p>
+            <p class="subheader">
+              If you like my work, check out
+              <a style="color: gold" href="http://www.elkorado.com" target="_blank">
+                elkorado
+              </a>, my other project.
+          </div>
+        </aside>
+
+          <section class="main-section">
+            <!-- content goes here -->
+
+            <div class="row">
+              <div class="small-12 small-centered text-center columns">
+
+                <div class="timer">
+                  <h1 id="countdown">{{duration}}</h1>
+
+                  <div class="ctrl button-group">
+                      <button {{action 'start'}} {{bind-attr disabled=isStarted}}>start
+                      </button><button {{action 'shortBreak'}} {{bind-attr disabled=isStarted}}>break
+                      </button><button {{action 'longBreak'}} {{bind-attr disabled=isStarted}}>long break
+                      </button><button {{action 'stop'}} {{bind-attr disabled=isStopped}}>stop</button>
+                      <br />
+                  </div>
+                  <br />
+                  <br />
+                  <br />
+
+                  <div class="button-bar">
+                    <ul class="button-group round">
+                      <li>{{#link-to 'pomodoros.today-stats' classNames='tiny button secondary'}}today{{/link-to}}</li>
+                      <li>{{#link-to 'pomodoros.week-stats' classNames='tiny button secondary'}}this week{{/link-to}}</li>
+                      <li>{{#link-to 'pomodoros.month-stats' classNames='tiny button secondary'}}this month{{/link-to}}</li>
+                      <li>{{#link-to 'settings' classNames='tiny button secondary'}}settings{{/link-to}}</li>
+                    </ul>
+                  </div>
+                </div>
+
+
+                {{outlet}}
+
+                {{# if showProjectModal}}
+                  {{#modal-dialog action='closeModal' name="projectName" show=pomodoroFinished}}
+                    <h3>Enter the project name</h3>
+                    {{input type='text' value=projectName}}
+                  {{/modal-dialog}}
+                {{/if}}
+
+              </div>
+            </div>
+
+          </section>
+
+        <a class="exit-off-canvas"></a>
 
       </div>
     </div>
@@ -148,9 +210,6 @@
           </fieldset>
         </div>
 
-
-
-
       </form>
 
 
@@ -202,7 +261,6 @@
 
 
 
-
   <script src="js/libs/jquery-1.10.2.js"></script>
 
   <script src="js/libs/handlebars-1.1.2.js"></script>
@@ -229,6 +287,11 @@
 
 
   <script src="js/vendors/fastclick.js"></script>
+
+<script>
+  $(document).foundation();
+</script>
+
 
 </body>
 </html>

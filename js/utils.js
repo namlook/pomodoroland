@@ -62,7 +62,7 @@ App.Storage = function(userkey) {
     var getLocalStorage = function() {
         var store;
         try {
-            store = JSON.parse(localStorage.getItem('Emberodoro')).store;
+            store = JSON.parse(localStorage.getItem('Pomodoroland')).store;
         }
         catch (e){
             store = [];
@@ -71,7 +71,7 @@ App.Storage = function(userkey) {
     };
 
     var saveToLocalStorage = function(data) {
-        localStorage.setItem('Emberodoro', JSON.stringify({store:data}));
+        localStorage.setItem('Pomodoroland', JSON.stringify({store:data}));
     };
 
     return {

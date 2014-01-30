@@ -24,6 +24,15 @@ label {
     display: inline;
 }
 
+.about-panel {
+    padding: 15px;
+    color: #fff;
+}
+
+.text-white {
+    color: #ccc;
+}
+
 .pomodoros{
     text-align: center;
     margin-bottom: 60px;
@@ -31,6 +40,10 @@ label {
 
 .muted {
     color: #ccc;
+}
+
+.about {
+    padding: 15px;
 }
 
 .pomodoros .title {
