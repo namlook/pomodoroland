@@ -222,7 +222,8 @@ App.PieChartComponent = Ember.Component.extend({
                 text: this.get('total')+"<br /> pomodoros",
                 align: 'center',
                 verticalAlign: 'middle',
-                y: 50
+                // y: 50
+                y: 0
             },
             plotOptions: {
                 pie: {
@@ -235,9 +236,12 @@ App.PieChartComponent = Ember.Component.extend({
                             textShadow: '0px 1px 2px black'
                         }
                     },
-                    startAngle: -90,
-                    endAngle: 90,
-                    center: ['50%', '75%']
+                    // startAngle: -90,
+                    // endAngle: 90,
+                    // center: ['50%', '75%']
+                },
+                area: {
+                    tooltip: true
                 }
             },
             credits: {

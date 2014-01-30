@@ -40,9 +40,9 @@ label {
 }
 
 .pie-component.pomodoro {
-    position: relative;
+/*    position: relative;
     top: -70px;
-    z-index: -100;
+    z-index: -100;*/
 }
 
 .reveal-modal.settings {
