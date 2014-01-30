@@ -75,8 +75,12 @@ App.Storage = function(userkey) {
     };
 
     return {
+        userkey: userkey,
+        setUserKey: function(userkey) {
+            this.userkey = userkey;
+        },
         insert: function(type, item) {
-            if (userkey) {
+            if (this.userkey) {
                 item.userKey = App.settings.get('parseKey');
                 $.parse.post(type, item);
             } else {
@@ -88,7 +92,7 @@ App.Storage = function(userkey) {
         find: function(type) {
             var results = Ember.A([]);
             var promise;
-            if (userkey) {
+            if (this.userkey) {
                 var userKey = App.settings.get('parseKey');
                 promise = new Ember.RSVP.Promise(function(resolve) {
                     $.parse.get(type, {where: {userKey: userKey}, order: "createdAt"}, function(data){
