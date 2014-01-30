@@ -22,43 +22,38 @@ App.IndexRoute = Ember.Route.extend({
 
 App.PomodorosRoute = Ember.Route.extend({
     model: function() {
-        // var models = [];
-        // var data = JSON.parse(localStorage.getItem('Emberodoro')).store;
-        // data.forEach(function(item){
-        //     models.push(App.Pomodoro.create(item));
-        // });
-        // return models;
         return App.storage.find('pomodoro');
     }
 });
 
 App.PomodorosTodayStatsRoute = Ember.Route.extend({
     model: function() {
-        return this.modelFor('pomodoros');
-            // var now = new Date();
-            // var today = new Date(now.toDateString());
-            // var r = App.store.find('pomodoro', {date: {$gt: today.getTime()}});
-            // console.log(r);
+        var today = new Date(new Date().toDateString());
+        return this.modelFor('pomodoros').filter(function(item) {
+            var date = new Date(item.get('date'));
+            return date > today;
+        });
     }
 });
 
 App.PomodorosWeekStatsRoute = Ember.Route.extend({
     model: function() {
-        return this.modelFor('pomodoros');
-        // return this.modelFor('pomodoros');
-        // var firstWeekDay = new Date().getFirstWeekDay();
-        // return App.store.find('pomodoro', {date: {$gt: firstWeekDay.getTime()}});
+        var firstWeekDay = new Date().getFirstWeekDay();
+        return this.modelFor('pomodoros').filter(function(item){
+            var date = new Date(item.get('date'));
+            return date >= firstWeekDay;
+        });
     }
 });
 
 App.PomodorosMonthStatsRoute = Ember.Route.extend({
     model: function() {
-        return this.modelFor('pomodoros');
-        return [];
-            var today = new Date();
-            var firstMonthDay = new Date(today.getFullYear(), today.getMonth(), 1);
-            return App.store.find('pomodoro', {date: {$gt: firstMonthDay.getTime()}});
-
+        var today = new Date();
+        var firstMonthDay = new Date(today.getFullYear(), today.getMonth(), 1);
+        return this.modelFor('pomodoros').filter(function(item){
+            var date = new Date(item.get('date'));
+            return date >= firstMonthDay;
+        });
     }
 });
 

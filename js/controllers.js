@@ -15,13 +15,14 @@ App.ApplicationController = Ember.Controller.extend({
     pomodoros: Ember.computed.alias('controllers.pomodoros'),
 
     savePomodoro: function(projectName) {
-        var pomodoros = this.get('pomodoros');
+        projectName = projectName || 'undefined';
         var pomodoro = {
             date: Date.now(),
-            project: projectName || 'undefined'
+            project: projectName
         };
+        this.set('savedPomodoro', pomodoro);
         App.storage.insert('pomodoro', pomodoro);
-        pomodoros.pushObject(App.Pomodoro.create(pomodoro));
+        this.set('savedPomodoro', null);
     },
 
     /*
@@ -109,9 +110,32 @@ App.ApplicationController = Ember.Controller.extend({
     }
 });
 
-App.PomodorosController = Ember.ArrayController.extend({});
 
-App.PomodorosTodayStatsController = Ember.ArrayController.extend({
+/*
+ * This mixin updates the pomodoros model each time a new pomodoro is finished
+ */
+App.PomodorosMixinController = Ember.Mixin.create({
+    needs: ['application'],
+
+    onPomodoroSaved: function() {
+        var pomodoro = this.get('controllers.application.savedPomodoro');
+        if (pomodoro) {
+            this.get('model').pushObject(App.Pomodoro.create(pomodoro));
+        }
+    }.observes('controllers.application.savedPomodoro'),
+
+});
+
+/*
+ * This controller doesn't display much but deals with the model
+ */
+App.PomodorosController = Ember.ArrayController.extend(App.PomodorosMixinController, {});
+
+
+/*
+ * Statistics of the day
+ */
+App.PomodorosTodayStatsController = Ember.ArrayController.extend(App.PomodorosMixinController, {
 
     total: Ember.computed.alias('model.length'),
 
@@ -122,6 +146,9 @@ App.PomodorosTodayStatsController = Ember.ArrayController.extend({
     nbProjects: Ember.computed.alias('projects.length'),
     hasMultiProjects: Ember.computed.gt('nbProjects', 1),
 
+    /*
+     * If there is multi project during the day, display the data as a pie chart
+     */
     pieData: function() {
         var data = {};
         this.get('model').getEach('project').forEach(function(project) {
@@ -138,7 +165,11 @@ App.PomodorosTodayStatsController = Ember.ArrayController.extend({
 
 });
 
-App.PomodorosWeekStatsController = Ember.ArrayController.extend({
+
+/*
+ * Statistics of the week
+ */
+App.PomodorosWeekStatsController = Ember.ArrayController.extend(App.PomodorosMixinController, {
 
     total: function() {
         return this.get('model.length');
@@ -198,7 +229,11 @@ App.PomodorosWeekStatsController = Ember.ArrayController.extend({
 
 });
 
-App.PomodorosMonthStatsController = Ember.ArrayController.extend({
+
+/*
+ * Statistics of the month
+ */
+App.PomodorosMonthStatsController = Ember.ArrayController.extend(App.PomodorosMixinController, {
 
     total: function() {
         return this.get('model.length');

@@ -85,23 +85,32 @@ App.Storage = function(userkey) {
                 saveToLocalStorage(data);
             }
         },
-        find: function(type, query) {
+        find: function(type) {
             var results = Ember.A([]);
+            var promise;
             if (userkey) {
                 var userKey = App.settings.get('parseKey');
-                $.parse.get(type, {where: {userKey: userKey}}, function(data){
-                    data.results.forEach(function(item){
-                        var obj = App[type.capitalize()].create(item);
-                        results.pushObject(obj);
+                promise = new Ember.RSVP.Promise(function(resolve) {
+                    $.parse.get(type, {where: {userKey: userKey}}, function(data){
+                        data.results.forEach(function(item){
+                            var obj = App[type.capitalize()].create(item);
+                            results.pushObject(obj);
+                        });
+                        resolve(results);
                     });
                 });
             } else {
-                var data = getLocalStorage();
-                data.forEach(function(item){
-                    results.push(App.Pomodoro.create(item));
+                promise = new Ember.RSVP.Promise(function(resolve) {
+                    Ember.run.later(function() {
+                        var data = getLocalStorage();
+                        data.forEach(function(item){
+                            results.push(App.Pomodoro.create(item));
+                        });
+                        resolve(results);
+                    });
                 });
             }
-            return results;
+            return promise;
         }
     };
 };
