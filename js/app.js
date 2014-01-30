@@ -15,13 +15,9 @@ App = Ember.Application.create({
             App.settings = new App.Settings();
         }
 
-        // if parseKey is in localStorage, use parse.com to store the data
         var parseKey;
-        try {
-            parseKey = JSON.parse(localStorage.getItem('settings')).parseKey;
-        }
-        catch (e) {
-            parseKey = null;
+        if (App.settings.get('selectedStorage') === 'cloud') {
+            parseKey = App.settings.get('parseKey');
         }
         App.storage = App.Storage(parseKey);
     }

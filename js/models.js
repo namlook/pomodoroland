@@ -96,7 +96,7 @@ App.Settings = Ember.Object.extend({
     dynamicTitle: true,
     multiProjects: true,
     parseKey: null,
-
+    selectedStorage: null,
 
     save: function() {
         properties = this.getProperties(
@@ -105,10 +105,19 @@ App.Settings = Ember.Object.extend({
             'longBreakDuration',
             'dynamicTitle',
             'multiProjects',
-            'parseKey'
+            'parseKey',
+            'selectedStorage'
         );
         localStorage.setItem('settings', JSON.stringify(properties));
-    }
+    }.observes(
+        'pomodoroDuration',
+        'shortBreakDuration',
+        'longBreakDuration',
+        'dynamicTitle',
+        'multiProjects',
+        'parseKey',
+        'selectedStorage'
+    )
 });
 
 

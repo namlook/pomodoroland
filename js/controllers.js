@@ -1,11 +1,14 @@
 
 App.SettingsController = Ember.Controller.extend({
-    actions: {
-        save: function() {
-            this.get('model').save();
+    storageLayers: ['localStorage', 'cloud'],
+
+    useCloud: Ember.computed.equal('model.selectedStorage', 'cloud'),
+
+    resetStorageLayer: function(){
+        Ember.run.next(function() {
             App.reset();
-        }
-    }
+        });
+    }.observes('useCloud')
 });
 
 
