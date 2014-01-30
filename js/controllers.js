@@ -1,16 +1,28 @@
 
+/*
+ * Settings Controller
+ */
 App.SettingsController = Ember.Controller.extend({
     storageLayers: ['localStorage', 'cloud'],
 
     useCloud: Ember.computed.equal('model.selectedStorage', 'cloud'),
+    parseKey: Ember.computed.alias('model.parseKey'),
 
     resetStorageLayer: function(){
-        Ember.run.next(function() {
-            App.reset();
-        });
-    }.observes('useCloud')
+        var parseKey = null;
+        if (this.get('useCloud')) {
+            parseKey = this.get('parseKey');
+        }
+        App.storage.setUserKey(parseKey);
+    }.observes('useCloud', 'parseKey')
 });
 
+
+/*
+ * Application controller.
+ *
+ * This is basically the timer and all the stuff around it
+ */
 
 App.ApplicationController = Ember.Controller.extend({
     needs: ['pomodoros'],
