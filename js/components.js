@@ -213,6 +213,7 @@ App.PieChartComponent = Ember.Component.extend({
         var $container = $('.pie-component.'+this.get('name'));
         var config = {
             chart: {
+                height: 350,
                 renderTo: $container[0],
                 plotBackgroundColor: null,
                 plotBorderWidth: 0,
