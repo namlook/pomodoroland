@@ -191,54 +191,46 @@ App.PomodorosWeekStatsController = Ember.ArrayController.extend(App.PomodorosMix
     }.property('@each'),
 
     data: function() {
-        formatDate = function(date){
-            return date.toDateString().split(' ').splice(0, 3).join(' ');
-        };
-
-        var columnNames = [],
-            columnData = [],
-            dataCount = {};
 
         var today = new Date();
-        var thisWeek = today.getWeek();
 
+        var columnNames = [];
+        var date = new Date();
+        for (var i=6; i>-1; i--) {
+            date.setTime(today.getTime() - i * 24 * 60 * 60 * 1000);
+            if (columnNames.indexOf(date.toDateString()) === -1) {
+                columnNames.push(date.toDateString());
+            }
+        }
+
+        var projectsCount = {};
         this.get('model').forEach(function(obj){
             var objDate = new Date(obj.get('date'));
             var project = obj.get('project');
             if (project === null) {
                 project = 'undefined';
             }
-            if (objDate.getWeek() === thisWeek) {
-                if (!dataCount[project]) {
-                    dataCount[project] = {};
+            var index = columnNames.indexOf(objDate.toDateString());
+            if (index > -1) {
+                if (!projectsCount[project]) {
+                    projectsCount[project] = [];
                 }
-                if (!dataCount[project][formatDate(objDate)]) {
-                    dataCount[project][formatDate(objDate)] = 0;
+                if (projectsCount[project][index] === undefined) {
+                    projectsCount[project][index] = 0;
                 }
-                dataCount[project][formatDate(objDate)] += 1;
+                projectsCount[project][index]++;
             }
         });
 
-        var todayString = formatDate(new Date());
-        var yesterday = new Date(today.toDateString());
-        yesterday.setTime(yesterday.getTime() - 24 * 60 * 60 * 1000);
-        var yesterdayString = formatDate(yesterday);
-
-        _.pairs(dataCount).forEach(function(projectPair) {
-            var project = projectPair[0];
-            var projectData = {name: project, data: []};
-            _.pairs(projectPair[1]).forEach(function(datePair){
-                var date = datePair[0];
-                var count = datePair[1];
-                if (date === todayString) {
-                    date = 'today';
-                } else if (date === yesterdayString) {
-                    date = 'yesterday';
+        columnData = [];
+        _.pairs(projectsCount).forEach(function(projectPair) {
+            var numbers = projectPair[1];
+            for (var i=0; i<numbers.length; i++) {
+                if (numbers[i] === undefined) {
+                    numbers[i] = 0;
                 }
-                columnNames.push(date);
-                projectData.data.push(count);
-            });
-            columnData.push(projectData);
+            }
+            columnData.push({name: projectPair[0], data: numbers});
         });
 
         return {'columnNames': columnNames, 'columnData': columnData};
@@ -261,45 +253,51 @@ App.PomodorosMonthStatsController = Ember.ArrayController.extend(App.PomodorosMi
     }.property('@each'),
 
     data: function() {
-        formatWeek = function(date){
-            return date.toDateString().split(' ').splice(0, 3).join(' ');
-        };
-
-        var columnNames = [],
-            columnData = [],
-            dataCount = {};
 
         var today = new Date();
-        var thisMonth = today.getMonth();
+        var thisWeek = today.getWeek();
+        var thisYear = today.getFullYear();
 
+        var columnNames = [];
+        for (var i=3; i>-1; i--) {
+            if (thisWeek - i >= 0) {
+                var key = thisYear+'-'+(thisWeek-i);
+                if (columnNames.indexOf(key) === -1) {
+                    columnNames.push(key);
+                }
+            }
+        }
+
+        var projectsCount = {};
         this.get('model').forEach(function(obj){
             var objDate = new Date(obj.get('date'));
             var project = obj.get('project');
             if (project === null) {
                 project = 'undefined';
             }
-            if (objDate.getMonth() === thisMonth) {
-                if (!dataCount[project]) {
-                    dataCount[project] = {};
+            var index = columnNames.indexOf(objDate.getFullYear()+'-'+objDate.getWeek());
+            if (index > -1) {
+                if (!projectsCount[project]) {
+                    projectsCount[project] = [];
                 }
-                var weekTitle = 'week '+objDate.getWeek();
-                if (!dataCount[project][weekTitle]) {
-                    dataCount[project][weekTitle] = 0;
+                if (projectsCount[project][index] === undefined) {
+                    projectsCount[project][index] = 0;
                 }
-                dataCount[project][weekTitle] += 1;
+                projectsCount[project][index]++;
             }
         });
-        _.pairs(dataCount).forEach(function(projectPair) {
-            var project = projectPair[0];
-            var projectData = {name: project, data: []};
-            _.pairs(projectPair[1]).forEach(function(datePair){
-                var date = datePair[0];
-                var count = datePair[1];
-                columnNames.push(date);
-                projectData.data.push(count);
-            });
-            columnData.push(projectData);
+
+        columnData = [];
+        _.pairs(projectsCount).forEach(function(projectPair) {
+            var numbers = projectPair[1];
+            for (var i=0; i<numbers.length; i++) {
+                if (numbers[i] === undefined) {
+                    numbers[i] = 0;
+                }
+            }
+            columnData.push({name: projectPair[0], data: numbers});
         });
+
         return {'columnNames': columnNames, 'columnData': columnData};
 
     }.property('@each.project'),

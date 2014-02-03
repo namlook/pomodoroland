@@ -38,10 +38,12 @@ App.PomodorosTodayStatsRoute = Ember.Route.extend({
 
 App.PomodorosWeekStatsRoute = Ember.Route.extend({
     model: function() {
-        var firstWeekDay = new Date().getFirstWeekDay();
+        var today = new Date();
+        var dayLastWeek = new Date(today.toDateString());
+        dayLastWeek.setTime(today.getTime() - 7 * 24 * 60 * 60 * 1000);
         return this.modelFor('pomodoros').filter(function(item){
             var date = new Date(item.get('date'));
-            return date >= firstWeekDay;
+            return date >= dayLastWeek;
         });
     }
 });
@@ -49,7 +51,11 @@ App.PomodorosWeekStatsRoute = Ember.Route.extend({
 App.PomodorosMonthStatsRoute = Ember.Route.extend({
     model: function() {
         var today = new Date();
-        var firstMonthDay = new Date(today.getFullYear(), today.getMonth(), 1);
+        var theMonth = today.getMonth() - 1;
+        if (theMonth < 0) {
+            theMonth = 0;
+        }
+        var firstMonthDay = new Date(today.getFullYear(), theMonth, 1);
         return this.modelFor('pomodoros').filter(function(item){
             var date = new Date(item.get('date'));
             return date >= firstMonthDay;
