@@ -95,7 +95,8 @@ App.Storage = function(userkey) {
             if (this.userkey) {
                 var userKey = App.settings.get('parseKey');
                 promise = new Ember.RSVP.Promise(function(resolve) {
-                    $.parse.get(type, {where: {userKey: userKey}, order: "createdAt"}, function(data){
+                    var query = {where: {userKey: userKey}, order: "-createdAt"};
+                    $.parse.get(type, query, function(data){
                         data.results.forEach(function(item){
                             var obj = App[type.capitalize()].create(item);
                             results.pushObject(obj);
