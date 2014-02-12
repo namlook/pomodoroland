@@ -30,8 +30,7 @@ App.PomodorosTodayStatsRoute = Ember.Route.extend({
     model: function() {
         var today = new Date(new Date().toDateString());
         return this.modelFor('pomodoros').filter(function(item) {
-            var date = new Date(item.get('date'));
-            return date > today;
+            return new Date(item.get('date')) > today;
         });
     }
 });
